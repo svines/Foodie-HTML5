@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Foodie</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+</head>
+<body id="wrapper">
+<div id="sidebar-wrapper">
+	<nav id="nav">
+		<ul class="sidebar-nav nav" id="navRight">
+			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
+			<li><a class="sub" href="map.html">Chefs</a></li>
+			<li><a class="sub" href="user-profile.html">My Profile</a></li>
+			<li><a class="sub" href="reservations.html">My Orders</a></li>
+		</ul>
+	</nav>
+</div>
+
+<!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+<div class="container">
+	<div id="chef-page" class="content">
+		<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
+		<p class="pageTitle">Manage  Dishes</p>
+		</h1>
+		<h2>
+			<button class="btn btn-xs btn-primary pull-right btnShowAdd"><i class="fa fa-plus-circle"></i> Add New</button>
+		</h2>
+		<div id="chef-foods">
+			<div class="food-listing hidden">
+				<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left" src="images/food-1.png" align="food img"></div>
+				<div class="food-info-cont">
+					<div class="food-info-body"> <a class="dishTitle" href="#">Strawbery muffin</a>
+						<button data-dish="0" class="btn btn-xs btn-warning btnEdit">Edit</button>
+						<br />
+						<p class="dishInfo"></p>
+						<img src="images/0.gif" alt="" class="rating" /> <span class="rating_info"></span> </div>
+				</div>
+			</div>
+			<div class="aLoading text-center" style="display:none"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
+		</div>
+	</div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="modal fade" id="popAdd" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="popAdd">Add/Edit Dish</h4>
+			</div>
+			<div class="modal-body">
+				<form method="post" id="frmReserve">
+					<div class="form-group">
+						<div id="image-upload" class="text-center" onClick="uploadImage()"> <img id="pimage" src="images/no-pic2.jpg" height="100" /> </div>
+						<div id="picture_msg" class="text-center help-block"> Tap on Image to change and upload </div>
+					</div>
+					<div class="form-group">
+						<label  class="">Dish Name</label>
+						<div class="">
+							<input type="text" name="dish_name" id="dish_nameA" class="form-control required" value="" placeholder="Dish Name">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="">Price ($)</label>
+						<div class="">
+							<input type="number" min="1" name="price" id="priceA" class="form-control required" value="" placeholder="Price">
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label  class="">Status</label>
+						<div class="">
+							<input type="radio" name="status" value="1" />
+							Active &nbsp;
+							<input type="radio" name="status" value="0" checked />
+							Inactive </div>
+					</div>
+					<input type="hidden" id="chef_id" name="chef_id">
+					<input type="hidden" id="dish_id" name="dish_id">
+					<input type="hidden" id="image1A" name="image1">
+					<input type="hidden" id="image2A" name="image2">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button id="btnAdd" type="button" class="btn btn-primary">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Script --> 
+<script type="text/javascript" src="cordova.js"></script> 
+<script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script> 
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script> 
+<script src="js/common.js"></script> 
+<script>
+
+var dishData;
+
+$(document).ready(function(e) {
+	var chef_id = localStorage.getItem('userId');
+	$('#chef_id').val(chef_id);
+	loadDishes(chef_id);
+	
+	
+	$('#btnAdd').on('click',function(){
+		$('#frmReserve').submit();		
+	});
+	
+	$('#chef-foods').on('click', '.btnEdit',function(){
+		var dish_id = $(this).prop('data-dish');
+		var thisDish;
+		for (var i = 0; i < dishData.length; i++){
+			if( dishData[i].id == dish_id ){
+				thisDish = dishData[i];
+				break;
+			}
+		}
+		$('#dish_id').val( dish_id );
+		$('#dish_nameA').val( thisDish.dish_name );
+		$('#priceA').val(thisDish.price);
+		//$('#servingA').val(thisDish.serving);
+		$('#image1A').val(thisDish.image1);
+		$('#image2A').val(thisDish.image2);
+		$("input[name=status][value="+thisDish.status+"]").prop('checked', true);
+		if(!empty(thisDish.image1)){
+			$('#pimage').prop('src','http://mobileapi.foodiesys.com/foodie-mssql/pics/'+thisDish.image1);
+		}else{
+			$('#pimage').prop('src','images/no-pic2.jpg');
+		}
+		$('#popAdd').modal();
+
+		
+	});
+	
+	
+	
+	$('.btnShowAdd').on('click',function(){
+		$('#dish_nameA').val('');
+		$('#priceA').val('');
+		//$('#servingA').val('');
+		$('#image1A').val('');
+		$('#image2A').val('');
+		$('#dish_id').val('');
+		$('#popAdd').modal();
+		$('#pimage').prop('src','images/no-pic2.jpg');
+	});
+	
+	$('#frmReserve').validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+			formData = $(form).serialize();
+			formData += '&userToken=' + localStorage.getItem('userToken');
+			$.ajax({
+				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=addEditDish", data: formData,
+				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+				}).fail(  ajaxError
+				).done(function(data){
+					if (data.Success == 'true') {
+						$('#popAdd').modal('hide');
+						BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
+						BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
+						BAlert.modal();
+						document.location = 'chef-dishes.html';
+						//loadDishes(localStorage.getItem('userId'));
+					} else { 
+						BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+						BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+						BAlert.modal();
+					}
+					if (data.JS) { eval(data.JS); }
+				
+			}); // ajax	
+		
+		}// submit handler
+	});
+	
+});
+
+
+
+function loadDishes(chef_id){
+	formData = 'chef_id='+chef_id;
+	console.log(formData);
+	$('div.food-listing').not(':first').remove();
+	$.ajax({
+		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getDishes", data: formData,
+		beforeSend: function() { $('div.aLoading').show();  },
+		complete: function() { $('div.aLoading').hide(); },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			if(data.Count > 0 ){
+				dishData = data.Dishes;
+				$DTemp = $('.food-listing');
+				for (var i = 0; i < dishData.length; i++) {
+					$copy = $DTemp.clone().removeClass('hidden');
+					$copy.find('img.img-responsive').prop('src', 'http://mobileapi.foodiesys.com/foodie-mssql/pics/'+dishData[i].image1);
+					$copy.find('a.dishTitle').html(dishData[i].dish_name);
+					$copy.find('a.dishTitle').prop('rel', dishData[i].id );
+					$copy.find('.btnEdit').prop('data-dish', dishData[i].id );
+					var stat = (dishData[i].status ==0)?'Inactive':'Active';
+					$copy.find('p.dishInfo').html('Price : $'+dishData[i].price+' <br />/Status : <strong>'+stat+'</strong>');
+					
+					obRat = ratingCal( dishData[i].rating_sum, dishData[i].rating_count );
+					
+					$copy.find('img.rating').prop('src', obRat['starImg']);
+					$copy.find('.rating_info').html( obRat['ratingTxt']+' &nbsp; '+dishData[i].rating_count+' Reviews' );
+					
+					$copy.appendTo('#chef-foods');
+				}
+				//$DTemp.remove();
+			}else{
+				$('#chef-foods').html('<center>No Rocord Found!</center>');
+			}
+		}else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+	
+	}); // ajax	
+}
+
+function uploadImage() {
+
+	$('#picture_msg').html('');
+	// Get URI of picture to upload
+	navigator.camera.getPicture(
+
+	function(uri) {
+		try {
+			// Pick image from div
+			var img = $('#pimage');
+			var imageURI = uri;
+			if (!imageURI) {
+				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				return;
+			}else{
+				$('#picture_msg').html("Uploading..");	
+			}
+			// Verify server has been entered
+			//server = 'http://mobileapi.foodiesys.com/foodie-mssql/upload.php';
+			server = 'http://mobileapi.foodiesys.com/foodie-mssql/upload.php'; //?chid='+localStorage.getItem('userId');
+			
+			var options = new FileUploadOptions();
+			options.fileKey = "file";
+			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+			options.mimeType = "image/jpeg";
+			options.chunkedMode = false;
+
+			// Transfer picture to server
+			var ft = new FileTransfer();
+			ft.upload(imageURI, server, function(r) {
+				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				if (r.response.match("^Error")){
+					$('#picture_msg').html(r.response);
+				}else{
+					$('#image1A').val(r.response);
+					img.prop('src','http://mobileapi.foodiesys.com/foodie-mssql/pics/' + r.response);	
+				}
+			},
+
+			function(error) {
+				$('#picture_msg').html("Upload failed: Code = " + error.code);
+			}, options);
+
+		} catch (exce) {
+			alert(exce);
+		}
+	},
+
+	function(e) {
+		console.log("Error getting picture: " + e);
+		$('#picture_msg').html("No Image Found");
+	}, {
+		quality: 60,
+		destinationType: navigator.camera.DestinationType.FILE_URI,
+		sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+		//allowEdit : true,
+		targetWidth: 600,
+  		targetHeight: 600
+	});
+}
+
+</script>
+</body>
+</html>

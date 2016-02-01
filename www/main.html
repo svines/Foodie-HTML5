@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Foodie</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Include the compiled Ratchet CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+<style>
+html, body{ height:100% }
+#ex4_container {
+	content-positioning: 50% 50%;
+}
+#ex4_content {
+	content-positioning-anchor: 50% 50%;
+}
+</style>
+</head>
+<body style="background-color:#FFF;">
+<div style="height:100%; background:url(images/splash.png) center center no-repeat"> </div>
+<script src="cordova.js"></script>
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/bootstrap.min.js"></script>
+<script src="js/common.js"></script>
+<script>
+
+document.addEventListener("deviceready", onDeviceReady, false);
+var Timeouts = 0;
+
+$(document).ready(function(e) {
+	onDeviceReady();
+});
+
+function onDeviceReady() {
+	
+	if (!navigator.geolocation){
+		alert('Geolocation not  available');
+	}else{
+		//var watchId = navigator.geolocation.watchPosition(showPosition, onShortError, { maximumAge: 300000, timeout: 5000, enableHighAccuracy:true });
+		navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });
+	}
+}
+
+function onShortError(error){
+	try{
+		BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> GPS Error ' );
+		BAlert.find('.modal-body').html('<p class="text-danger">App is unable to find your current position. Either GPS signals are weak or GPS has been switched off.</p>');
+		BAlert.modal();	
+		
+		if(error.code == 3){
+			Timeouts = Timeouts + 1;
+			if( Timeouts > 3){
+				showPosition(null);
+				return;	
+			}
+			navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });	
+		}
+	}catch(err) {
+		alert(err.message);
+	}
+}
+
+function geoLocationError(error){
+	BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error ('+error.code+')' );
+	BAlert.find('.modal-body').html('<p class="text-danger">Could not get the current position. Either GPS signals are weak or GPS has been switched off</p>');
+	BAlert.modal();	
+}
+
+function showPosition(position) {
+	try{
+	
+	if( Timeouts > 3){
+		lat = 26.1644398;
+		lng = -80.1621635;
+	}else{
+		var lat = position.coords.latitude;
+		var lng = position.coords.longitude;
+	}
+	
+	localStorage.setItem('lat', lat );
+	localStorage.setItem('lng', lng );
+	
+	var formData = 'lat='+localStorage.getItem("lat")+'&lng='+localStorage.getItem("lng")+'&user_id='+localStorage.getItem("userId")+'&app_token='+localStorage.getItem("userToken");
+
+	$.ajax({
+		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=initApp",
+		data: formData
+	}).fail(  ajaxError )
+	.done(function(data){
+		console.log('done');
+		if (data.Success == 'true') {
+			localStorage.setItem('nearbyChefs', data.nearbyChefs );
+			localStorage.setItem('nearbyChefsCount', data.nearbyChefsCount );
+			localStorage.setItem('chefStatus', data.chefStatus );
+			localStorage.setItem('chefData', data.chefData );
+			localStorage.setItem('userData', data.userData );
+			
+			if(empty(localStorage.getItem("userId"))){
+				setTimeout(function(){ document.location = 'register.html'; }, 1000);
+			}else{
+				setTimeout(function(){ document.location = 'map.html'; }, 1000);
+			}
+			
+		}else{ 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+	});// ajax
+
+	
+	}catch(err) {
+		alert(err.message);
+	}
+	
+}
+/** /
+if(localStorage.getItem("userId")=== null){
+	setTimeout(function(){ document.location = 'register.html'; }, 2000);
+}else{
+	setTimeout(function(){ document.location = 'map.html'; }, 2000);
+}
+/**/
+
+</script>
+</body>
+</html>

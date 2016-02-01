@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Foodie</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="css/jquery-gmaps-latlon-picker.css"/>
+</head>
+<body id="wrapper">
+<div id="sidebar-wrapper">
+	<nav id="nav">
+		<ul class="sidebar-nav nav" id="navRight">
+			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
+			<li><a class="sub" href="map.html">Chefs</a></li>
+			<li><a class="sub" href="user-profile.html">My Profile</a></li>
+			<li><a class="sub" href="reservations.html">My Orders</a></li>
+		</ul>
+	</nav>
+</div>
+<div id="user-profile-page" class="content">
+	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
+		<p class="pageTitle">Edit Chef Profile</p>
+	</h1>
+	<div id="topAlert" style="display:none" class="alert alert-warning"><i class="fa fa-warning"></i> Please fill your chef profile below to register as a chef; however your profile will be active once approved by our staff.</div>
+	
+	
+	<div id="aLoading" class="aLoading text-center" style="display:none"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
+	
+	<form id="user-form" style="display:none">
+		<div class="form-group">
+			<div id="image-upload" class="text-center" onClick="uploadImage()"> <img id="pimage" src="images/no-pic.jpg" height="100" /> </div>
+			<div id="picture_msg" class="text-center help-block"> Tap on picture to change/upload </div>
+		</div>
+		<div class="form-group">
+			<label for="">Company Name</label>
+			<input class="form-control required" type="text" name="company" value=""  placeholder="Company Name">
+		</div>
+		<div class="form-group col-xs-6">
+			<label for="">First Name</label>
+			<input class="form-control" type="text" name="first_name" value=""  placeholder="First Name">
+		</div>
+		<div class="form-group col-xs-6 last">
+			<label for="">Last Name</label>
+			<input class="form-control" type="text" name="last_name" value="" placeholder="Last Name">
+		</div>
+		<div class="form-group">
+			<label for="">Paypal Email</label>
+			<input class="form-control required" type="email" name="email" value="" placeholder="Paypal Email">
+			<p class="help-block">Enter your corporate PayPal email address where you will receive Foodie payments.</p>
+		</div>
+		<div class="form-group">
+			<label for="">Phone</label>
+			<input class="form-control required" type="phone" name="phone" value="" placeholder="Phone">
+		</div>
+		<div class="form-group">
+			<label for="">Address</label>
+			<input class="form-control required" type="text" name="address" value=""  placeholder="Address">
+		</div>
+		<div class="form-group">
+			<label for="">City</label>
+			<input class="form-control required" type="text" name="city" value=""  placeholder="City">
+		</div>
+		<div class="form-group col-xs-6">
+			<label for="">State</label>
+			<select class="form-control required" name="state" id="state">
+				<option value="">-- Select State --</option>
+				<option value="AL">Alabama</option>
+				<option value="AK">Alaska</option>
+				<option value="AZ">Arizona</option>
+				<option value="AR">Arkansas</option>
+				<option value="CA">California</option>
+				<option value="CO">Colorado</option>
+				<option value="CT">Connecticut</option>
+				<option value="DE">Delaware</option>
+				<option value="DC">Dist. of Columbia</option>
+				<option value="FL">Florida</option>
+				<option value="GA">Georgia</option>
+				<option value="HI">Hawaii</option>
+				<option value="ID">Idaho</option>
+				<option value="IL">Illinois</option>
+				<option value="IN">Indiana</option>
+				<option value="IA">Iowa</option>
+				<option value="KS">Kansas</option>
+				<option value="KY">Kentucky</option>
+				<option value="LA">Louisiana</option>
+				<option value="ME">Maine</option>
+				<option value="MD">Maryland</option>
+				<option value="MA">Massachusetts</option>
+				<option value="MI">Michigan</option>
+				<option value="MN">Minnesota</option>
+				<option value="MS">Mississippi</option>
+				<option value="MO">Missouri</option>
+				<option value="MT">Montana</option>
+				<option value="NE">Nebraska</option>
+				<option value="NV">Nevada</option>
+				<option value="NH">New Hampshire</option>
+				<option value="NJ">New Jersey</option>
+				<option value="NM">New Mexico</option>
+				<option value="NY">New York</option>
+				<option value="NC">North Carolina</option>
+				<option value="ND">North Dakota</option>
+				<option value="OH">Ohio</option>
+				<option value="OK">Oklahoma</option>
+				<option value="OR">Oregon</option>
+				<option value="PA">Pennsylvania</option>
+				<option value="RI">Rhode Island</option>
+				<option value="SC">South Carolina</option>
+				<option value="SD">South Dakota</option>
+				<option value="TN">Tennessee</option>
+				<option value="TX">Texas</option>
+				<option value="UT">Utah</option>
+				<option value="VT">Vermont</option>
+				<option value="VA">Virginia</option>
+				<option value="WA">Washington</option>
+				<option value="WV">West Virginia</option>
+				<option value="WI">Wisconsin</option>
+				<option value="WY">Wyoming</option>
+			</select>
+		</div>
+		<div class="form-group col-xs-6 last">
+			<label for="">Zip</label>
+			<input class="form-control required" type="text" name="zip" value="" id="zip" placeholder="Zip">
+		</div>
+		
+		<div class="form-group col-xs-6 ">
+			<label for="">Seating Capacity</label>
+			<input class="form-control required" type="number" name="capacity" value="" id="capacity" placeholder="Seating Capacity">
+		</div>
+		<input type="hidden" name="image1" id="hd_image1" value="" />
+		<input type="hidden" name="image2" id="hd_image2" value="" />
+		
+		<button type="submit" id="btnSubmit" class="btn btn-primary btn-block btn-submit">Submit</button>
+	</form>
+</div>
+<script src="cordova.js"></script> 
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/common.js"></script> 
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
+
+<script>
+
+$(document).ready(function(e) {
+	
+	setSubmitButton();
+	
+	var formData = '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+	$.ajax({
+		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getChefProfile", data: formData,
+		beforeSend: function() { $('#aLoading').show();  },
+		complete: function() { $('#aLoading').hide(); },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			localStorage.setItem('chefData', data.chefData );
+			localStorage.setItem('chefStatus', data.chefStatus );
+			prepareForm();
+			$("#user-form").show();
+			setSubmitButton();
+			initMenu();
+		} else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+	
+	}); // ajax	
+
+	
+	
+	
+	//$('#popLoc').modal();
+
+	
+	//$(document).gMapsLatLonPicker().init( $('#gllpLatlonPicker') );
+	
+	$("#user-form").validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+
+			formData = $(form).serialize();
+			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+			$.ajax({
+				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=chefUpdate", data: formData,
+				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					localStorage.setItem('chefData', data.chefData );
+					localStorage.setItem('chefStatus', data.chefStatus );
+					BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
+					BAlert.find('.modal-body').html('<p class="text-success">Your profile has been updated successfuly.</p>');
+					BAlert.modal();
+					setSubmitButton();
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				if (data.JS) { eval(data.JS); }
+			
+			}); // ajax	
+
+		}// submit handler
+	});	
+	
+});
+
+function prepareForm(){
+	var jsonData = {};
+	if( !empty(localStorage.getItem('chefStatus')) && !empty(localStorage.getItem('chefData'))){
+		jsonData = JSON.parse(localStorage.getItem('chefData'));
+		
+		$('#user-form').find(':input').each(function(){
+			el = $(this);
+			if( el.prop('type') == 'radio' || el.prop('type') == 'checkbox'  ){
+				if( el.val() == jsonData[el.prop('name')] ){ el.prop('checked', true); el.trigger('change'); }
+			}else{
+				if( !empty(jsonData[el.prop('name')])  ){
+					el.val( jsonData[el.prop('name')] );
+				}
+			}
+		});
+		
+		if(!empty(jsonData.image1)){
+			$('#pimage').prop('src','http://mobileapi.foodiesys.com/foodie-mssql/pics/' + jsonData.image1);	
+		}
+	}else{ // Become A Chef
+		$('#pickLat').val(localStorage.getItem('lat'));
+		$('#pickLng').val(localStorage.getItem('lng'));	
+		$('#topAlert').show();
+	}	
+}
+
+
+function uploadImage() {
+
+	$('#picture_msg').html('');
+	// Get URI of picture to upload
+	navigator.camera.getPicture(
+
+	function(uri) {
+		try {
+			// Pick image from div
+			var img = $('#pimage');
+			var imageURI = uri;
+			if (!imageURI) {
+				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				return;
+			}else{
+				$('#picture_msg').html("Uploading..");	
+			}
+			// Verify server has been entered
+			//server = 'http://mobileapi.foodiesys.com/foodie-mssql/upload.php';
+			server = 'http://mobileapi.foodiesys.com/foodie-mssql/upload.php'; //?chid='+localStorage.getItem('userId');
+			
+			var options = new FileUploadOptions();
+			options.fileKey = "file";
+			options.fileName = imageURI.substr(imageURI.lastIndexOf('/') + 1);
+			options.mimeType = "image/jpeg";
+			options.chunkedMode = false;
+
+			// Transfer picture to server
+			var ft = new FileTransfer();
+			ft.upload(imageURI, server, function(r) {
+				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				if (r.response.match("^Error")){
+					$('#picture_msg').html(r.response);
+				}else{
+					$('#hd_image1').val(r.response);
+					img.prop('src','http://mobileapi.foodiesys.com/foodie-mssql/pics/' + r.response);	
+				}
+			},
+
+			function(error) {
+				$('#picture_msg').html("Upload failed: Code = " + error.code);
+			}, options);
+
+		} catch (exce) {
+			alert(exce);
+		}
+	},
+
+	function(e) {
+		console.log("Error getting picture: " + e);
+		$('#picture_msg').html("No Image Found");
+	}, {
+		quality: 60,
+		destinationType: navigator.camera.DestinationType.FILE_URI,
+		sourceType: navigator.camera.PictureSourceType.PHOTOLIBRARY,
+		targetWidth: 600,
+  		targetHeight: 600
+	});
+}
+
+function setSubmitButton(){
+	$('#btnSubmit').removeClass('disabled');
+	if(localStorage.getItem('chefStatus')== '1' ){ // pending approval
+		$('#btnSubmit').html('Pending Approval').addClass('disabled');
+	}else if(localStorage.getItem('chefStatus')== '2' ){ // approved/active
+		$('#btnSubmit').html('UPDATE');
+	}
+}
+
+
+</script>
+</body>
+</html>

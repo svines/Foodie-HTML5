@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Foodie</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+<link href="css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<style>
+.bootstrap-datetimepicker-widget table td.today:before, .bootstrap-datetimepicker-widget table td.today:before:hover {
+ display:none;
+}
+.bootstrap-datetimepicker-widget table td.day, .bootstrap-datetimepicker-widget table td.day:hover {
+	background-color: #5CB85C;
+	color: #FFF;
+	text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+}
+.bootstrap-datetimepicker-widget table td.disabled, .bootstrap-datetimepicker-widget table td.disabled:hover {
+	color: #CCC !important;
+	background-color: transparent !important;
+}
+.bootstrap-datetimepicker-widget table td.active, .bootstrap-datetimepicker-widget table td.active:hover {
+	background-color: #FF7F00;
+	color: #FFF;
+}
+.bootstrap-datetimepicker-widget table td, .bootstrap-datetimepicker-widget table th {
+	border-radius: 0;
+}
+.spDishD{ display:none; }
+</style>
+</head>
+<body id="wrapper">
+<div id="sidebar-wrapper">
+	<nav id="nav">
+		<ul class="sidebar-nav nav" id="navRight">
+			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
+			<li><a class="sub" href="map.html">Chefs</a></li>
+			<li><a class="sub" href="user-profile.html">My Profile</a></li>
+			<li><a class="sub" href="reservations.html">My Orders</a></li>
+		</ul>
+	</nav>
+</div>
+
+<!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+<div id="chef-page" class="content">
+	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
+	<p class="pageTitle">Chef Profile</p>
+	 </h1>
+	<div id="chef-banner">
+		<div class="container">
+			<div class="row">
+				<div class="chef-profile-info">
+					<h3 id="p_company">...</h3>
+					<img src="images/0.gif" id="p_rating" > <span id="rating_text"></span> </div>
+				<div class="chef-banner-image text-center"> <img id="p_image1" class="img-responsive banner-img img-rounded" src="data:image/gif;base64,R0lGODlhAQABAIAAAP7//wAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="chef"> </div>
+			</div>
+		</div>
+	</div>
+	<div id="chef-info-cont">
+		<div class="container">
+			<div class="row">
+				<div class="col-xs-4 chef-info">
+					<div class="chef-info-box">
+						<h3 id="p_people_served">0</h3>
+						<p>People Served</p>
+					</div>
+				</div>
+				<div class="col-xs-4 chef-info">
+					<div class="chef-info-box">
+						<h3 id="p_food_cost">0</h3>
+						<p>Food Cost</p>
+					</div>
+				</div>
+				<div class="col-xs-4 chef-info">
+					<div class="chef-info-box last-info-box">
+						<h3 id="p_rating_count">0</h3>
+						<p>Reviews</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<h2 class="text-center">Available Dishes <button id="btnStartOrder" class="btn btn-primary disabled">Order Now</button></h2>
+	<div id="chef-foods">
+		<div class="food-listing hidden">
+			<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left" src="images/food-1.png" align="food img"> </div>
+			<div class="food-info-cont">
+				<div class="food-info-body"> <a class="dishTitle">Strawbery muffin</a><br />
+					<p class="dishInfo"></p>
+					<!--<img src="images/0.gif" alt="" class="rating" /> <span class="rating_info"></span>
+					<button data-dish="0" class="btn btn-xs btn-primary pull-right btnReserve">Reserve Now</button>-->
+				</div>
+			</div>
+		</div>
+		<div class="aLoading text-center" style="display:none"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
+		
+	</div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="modal fade" id="popReserve" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="popReserve">Add Reservation</h4>
+			</div>
+			<div class="modal-body">
+				<form method="post" id="frmReserve">
+					
+					<div id="Step1">
+					<div class="form-group">
+						<label  class="">Number of Persons</label>
+						<div class="">
+							<input type="number" min="1" step="1" name="quantity" id="d_quantity" class="form-control required digits" value="1" placeholder="Quantity to Order">
+						</div>
+					</div>
+					<div class="form-group">
+						<label  class="">Pick a date from available dates(green) below</label>
+						<div style="overflow:hidden; border:2px solid #DDD; padding:5px 5px 0 5px" >
+							<div class="form-group">
+								<div class="row">
+									<div class="col-md-8">
+										<div id="datetimepicker12"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<input type="hidden" name="d_date" id="d_date" value="" />
+					</div>
+					<div class="form-group">
+						<label  class="">Time</label>
+						<div class="">
+							<select name="d_time" id="d_time" class="form-control required">
+								<option value="">Select Time</option>
+							</select>
+						</div>
+					</div>
+					</div>
+					
+					<div id="Step2">
+						<h4>Select Dishes</h4>
+						<div id="spAvDishes">
+							<ul class="list-group">
+							</ul>
+						</div>
+						<h2 id="d_total" style="color:#C00">Total : $0.00</h2>
+					</div>
+					
+					
+					
+					<input type="hidden" id="dish_id" name="dish_id">
+					<input type="hidden" id="chef_id" name="chef_id">
+					<input type="hidden" id="user_id" name="user_id">
+					<input type="hidden" id="unit_price" name="unit_price">
+					<input type="hidden" id="res_id" name="res_id">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button id="btnNext" type="button" class="btn btn-primary">Next <i class="fa fa-arrow-circle-o-right"></i></button>
+				<button id="btnOrder" type="button" class="btn btn-primary">Order Now</button>
+			</div>
+		</div>
+		
+	</div>
+</div>
+<div id="bottom-bar">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-4 no-padding"> <a class="tab-item " href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> 
+				<!-- <i class="fa fa-map-o tab"></i> --> 
+				<img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-4 no-padding"> <a class="tab-item active" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+		</div>
+	</div>
+</div>
+
+<!-- Script --> 
+<script type="text/javascript" src="cordova.js"></script> 
+<script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script> 
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script> 
+<script src="js/common.js"></script> 
+<script src="js/moment.min.js"></script> 
+<script src="js/bootstrap-datetimepicker.min.js"></script> 
+<script>
+
+var dishData;
+var DishAv;			// from server 0-n index
+var DishAvO = {}; // date index
+var thisDate;
+var Total;
+var OrderId = null; 
+var chef_id = null;
+
+$(document).ready(function(e) {
+
+	chef_id = getUrlParameter('id');
+	var chef_data;
+	
+	
+	
+	if( chef_id > 0 ){
+		
+		var jsonData = JSON.parse(localStorage.getItem('nearbyChefs'));
+		for (var i = 0; i < jsonData.length; i++) {
+			if( jsonData[i].id == chef_id ){
+				chef_data = jsonData[i];
+				break;
+			}
+		}
+		if(empty(chef_data.image1)){
+			$('#p_image1').prop('src', 'images/no-pic3.jpg');		
+		}else{
+			$('#p_image1').prop('src', 'http://mobileapi.foodiesys.com/foodie-mssql/pics/'+chef_data.image1);
+		}
+
+		$('#p_company').html(chef_data.company);
+		$('#p_people_served').html(chef_data.people_served);
+		$('#p_food_cost').html(chef_data.food_cost);
+		$('#p_rating_count').html(chef_data.rating_count);
+		
+		
+		obRat = ratingCal( jsonData[i].rating_sum, jsonData[i].rating_count );
+		$('#p_rating').prop('src', obRat['starImg'] );
+		$('#rating_text').html( obRat['ratingTxt'] );
+		
+	}
+	
+	
+	
+	$('#datetimepicker12').datetimepicker({
+		inline: true,
+		sideBySide: false,
+		format: 'YYYY-MM-DD'
+	});	
+	
+	$('#datetimepicker12').on('dp.change', function(m) {
+		var sd = m.date.format("YYYY-MM-DD");
+		thisDate = sd;
+		console.log( DishAvO[sd] );
+		$('#d_time').find("option:gt(0)").remove();
+
+		
+		var st = parseInt(moment(DishAvO[sd].start_time,'HH:mm:ss').format('H'));
+		var en = parseInt(moment(DishAvO[sd].end_time,'HH:mm:ss').format('H'));
+		
+		if( en == 0 ){ en = 24; }  
+				
+		while( st < en ){
+			mm = moment(st,'H');
+			$('#d_time').append('<option value="'+ mm.format('HH:mm:ss') +'">'+ mm.format('hh:00 A')  +'</option>');
+			st++;
+		}
+		
+	});
+	
+	
+	loadDishes(chef_id);
+	
+	
+	$('#btnStartOrder').on('click',function(){
+		
+		var user_profile_complete = false;
+		if( !empty(localStorage.getItem('userData'))){
+			var userData = JSON.parse(localStorage.getItem('userData'));
+			if( !empty(userData.first_name) && !empty(userData.last_name) && !empty(userData.phone)  ){
+				user_profile_complete = true;	
+			}
+		}
+		if( user_profile_complete == false ){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">In order to place an order, you need to complete your profile. Please tap <a href="user-profile.html?ret='+chef_id+'">HERE</a> to complete your profile!</p>');
+			BAlert.modal();
+			return false;
+		}
+		
+		
+		var enabledDates = [];
+		var defDate = null;
+		if( !empty(DishAv)){
+			for (var i = 0; i < DishAv.length; i++) {
+				mo = moment(DishAv[i].cal_date, 'YYYY-MM-DD');
+				if( mo.isAfter(moment()) || mo.isSame(moment(),'day')  ){
+					if(empty(defDate)){ defDate = DishAv[i].cal_date };
+					enabledDates.push(DishAv[i].cal_date);
+					DishAvO[DishAv[i].cal_date] = { 'date': DishAv[i].cal_date, 'start_time': DishAv[i].start_time, 'end_time': DishAv[i].end_time, 'dishes': DishAv[i].dishes };
+				}
+			}
+		}
+		if(empty(enabledDates)){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">This chef is not available</p>');
+			BAlert.modal();
+			return false;
+			//$('#datetimepicker12').data("DateTimePicker").enabledDates([moment("06/15/2000")]);
+		}else{
+			$('#datetimepicker12').data("DateTimePicker").enabledDates(enabledDates);
+			$('#datetimepicker12').data("DateTimePicker").defaultDate( defDate );
+		}
+		
+		
+		$('#Step1').show(); $('#btnNext').show();
+		$('#Step2').hide(); $('#btnOrder').hide();
+		$('#popReserve').modal();
+		
+	});
+	
+	$('#btnNext').on('click',function(){
+		if( empty(thisDate) || empty($('#d_time').val()) ){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">Please pick date and time!</p>');
+			BAlert.modal();
+		}else{
+			formData = 'chef_id='+chef_id+'&quantity='+ $('#d_quantity').val()+'&d_date='+thisDate+'&d_time='+$('#d_time').val();
+			$.ajax({
+				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=checkAvailable", data: formData,
+				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					
+					var dateDishes = DishAvO[thisDate].dishes;
+					dateDishes = dateDishes.split(',');
+					console.log(dateDishes);
+					$('#spAvDishes ul').empty();
+					for (var i = 0; i < dishData.length; i++) {
+						if( $.inArray( dishData[i].id, dateDishes )){
+							$('#spAvDishes ul').append('<li class="list-group-item">'+
+								'<input type="checkbox" data-price="'+dishData[i].price+'" data-name="'+dishData[i].dish_name+'" value="'+dishData[i].id+'"> '+dishData[i].dish_name+
+								'<div class="spDishD">Price : $'+dishData[i].price+ ' &nbsp; Qty : <input id="aQty'+dishData[i].id+'" type="number" value="1" class="input-sm inline" /></div></li>');
+						} 
+					}
+					$('#Step1').hide(); $('#btnNext').hide();	
+					$('#Step2').show(500); $('#btnOrder').show(500);
+					
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				//if (data.JS) { eval(data.JS); }
+			}); // ajax	
+			
+		}
+	});
+	
+	$('#spAvDishes').on('change', 'input',function(){
+		if( $(this).is(':checked')){
+			$(this).parent('li').find('.spDishD').show(200);
+			//$('#aDish'+$(this).val()+' .spDishD').show(200);
+		}else{
+			//$('#aDish'+$(this).val()+' .spDishD').hide();	
+			$(this).parent('li').find('.spDishD').hide(150);	
+		}
+		getTotal();
+	});
+	
+	/*
+	$('#d_quantity').on('change',function(){
+		var t = $('#unit_price').val() * $('#d_quantity').val();
+		$('#d_total').html('Total : $'+t.toFixed(2));
+	});
+	*/	
+	
+	
+	$('#btnOrder').on('click',function(){
+		$('#frmReserve').submit();
+	});
+	
+	$('#frmReserve').validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+			var dishes = [];
+			Total = 0
+			$('#spAvDishes [type=checkbox]').each(function(index, element) {
+				if($(this).is(':checked')){
+					qty = $('#aQty'+$(this).val()).val();
+					dishes.push( {'id':$(this).val(), 'name': $(this).data('name'), 'qty':qty,'price': $(this).data('price') } ); 
+					Total = Total + parseFloat($(this).data('price')) * parseFloat(qty); 
+				}	
+			});
+			
+			if( Total == 0 ){
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+				BAlert.find('.modal-body').html('<p class="text-danger">Please select at least one dish!</p>');
+				BAlert.modal();
+				return false;
+			}
+			
+			Total = Total.toFixed(2);
+			formData = {'chef_id': chef_id, 'date' : thisDate, 'time': $('#d_time').val(), 'persons': $('#d_quantity').val(), 'total': Total, 'dishes': dishes };
+			console.log(formData);
+			formData = 'jsonData='+JSON.stringify(formData);
+			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+			
+			
+			$.ajax({
+				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=Reserve2", data: formData,
+				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					/**///=========== PayPal ===========
+					if(empty(OrderId)){
+						OrderId = data.ResId ;
+						ppApp.Amount = Total;
+						ppApp.Description = 'Foodie Reservation '+data.ResId;
+						ppApp.initialize();
+					}
+					/**///=========== /PayPal ==========
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				if (data.JS) { eval(data.JS); }
+			
+			}); // ajax	
+		
+		}// submit handler
+	});
+	
+});
+function getTotal(){
+	var Total = 0.0;
+	$('#spAvDishes [type=checkbox]').each(function(index, element) {
+		if($(this).is(':checked')){
+			Total = Total + $(this).data('price') * $('#aQty'+$(this).val()).val(); 
+		}	
+	});
+	$('#d_total').html('Total : $'+Total.toFixed(2));
+}
+
+
+function loadDishes(chef_id){
+	formData = 'chef_id='+chef_id+'&DishAv=1';
+	//console.log(formData);
+	$.ajax({
+		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getDishes", data: formData,
+		beforeSend: function() { $('div.aLoading').show();  },
+		complete: function() { $('div.aLoading').hide(); },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			if(data.Count > 0 ){
+				dishData = data.Dishes;
+				DishAv = data.DishAv;
+				$DTemp = $('.food-listing');
+				for (var i = 0; i < dishData.length; i++) {
+					$copy = $DTemp.clone().removeClass('hidden');
+					
+					if(empty(dishData[i].image1)){
+						$copy.find('img.img-responsive').prop('src', 'images/no-pic3.jpg');		
+					}else{
+						$copy.find('img.img-responsive').prop('src', 'http://mobileapi.foodiesys.com/foodie-mssql/pics/'+dishData[i].image1);
+					}
+					
+					//$copy.find('img.img-responsive').prop('src', 'http://mobileapi.foodiesys.com/foodie-mssql/pics/'+dishData[i].image1);
+					$copy.find('a.dishTitle').html(dishData[i].dish_name);
+					$copy.find('a.dishTitle').prop('rel', dishData[i].id );
+					$copy.find('.btnReserve').prop('data-dish', dishData[i].id );
+					$copy.find('p.dishInfo').html('Price : $'+dishData[i].price);
+					
+					/*obRat = ratingCal( dishData[i].rating_sum, dishData[i].rating_count );
+					$copy.find('img.rating').prop('src', obRat['starImg']);
+					$copy.find('.rating_info').html( obRat['ratingTxt']+' &nbsp; '+dishData[i].rating_count+' Reviews' );*/
+				
+					$copy.appendTo('#chef-foods');
+				}
+				$('#btnStartOrder').removeClass('disabled');
+			}else{
+				$('#chef-foods').html('<center>No Rocord Found!</center>');
+			}
+		}else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+		
+	}); // ajax	
+}
+
+var ppApp = {
+	// Application Constructor
+	Amount : 10,
+	Description : '',
+	
+	initialize: function() {
+		//this.bindEvents();
+		this.initPaymentUI();
+	},
+	initPaymentUI: function() {
+		//alert('initPaymentUI');
+		var clientIDs = {
+			"PayPalEnvironmentProduction": "ASOpOwfV9I_K7EjISTD8r3m5EHxPsxwtg_EogWy8chFwob3LnsAfqkuFcnVLDKt0j3zIuHEeKSsR8KJu",
+			"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
+		};
+		try {
+			PayPalMobile.init(clientIDs, ppApp.onPayPalMobileInit);
+		} catch (err) {
+			alert(err);
+		}
+	},
+	onSuccesfulPayment: function(payment) {
+		//alert("payment success: " + JSON.stringify(payment, null, 4));
+		$('#popReserve').modal('hide');
+		var formData = 'paypal_id='+payment.response.id+'&paypal_status='+payment.response.state+'&res_id='+OrderId;
+		formData += '&user_id=' + localStorage.getItem('userId') + '&userToken=' + localStorage.getItem('userToken');
+		$.ajax({
+			type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=reserveApproved", data: formData,
+			beforeSend: function() { $('div.aLoading').show();  },
+			complete: function() { $('div.aLoading').hide(); },
+		}).fail(  ajaxError )
+		.done(function(data){
+			if (data.Success == 'true') {
+				BAlert.find('.modal-header h3').html('<i class="fa fa-check"></i> Success');
+				BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
+				BAlert.modal();
+			}else { 
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+				BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+				BAlert.modal();
+			}
+			if (data.JS) { eval(data.JS); }
+		
+		}); // ajax	
+	},
+	
+	configuration: function() {
+		var config = new PayPalConfiguration({
+			merchantName: "Foodie",
+			merchantPrivacyPolicyURL: "https://foodiesys.com/policy",
+			merchantUserAgreementURL: "https://foodiesys.com/agreement"
+		});
+		return config;
+	},
+
+	onPrepareRender: function() {
+		ppApp.payNow(ppApp.Amount, ppApp.Description );
+	},
+
+	payNow: function(Amount, Desc) {
+		//alert('buy Now');
+		var paymentDetails = new PayPalPaymentDetails(Amount, "0.00", "0.00");
+		var payment = new PayPalPayment(Amount, "USD", Desc, "Sale", paymentDetails);
+		PayPalMobile.renderSinglePaymentUI(payment, ppApp.onSuccesfulPayment, ppApp.onUserCanceled);
+	},
+
+	onPayPalMobileInit: function() {
+		// must be called
+		// use PayPalEnvironmentNoNetwork mode to get look and feel of the flow
+		//alert('onPayPalMobileInit');
+		if( localStorage.getItem('userId') == '13' ){
+			PayPalMobile.prepareToRender("PayPalEnvironmentSandbox", ppApp.configuration(), ppApp.onPrepareRender);
+		}else{
+			PayPalMobile.prepareToRender("PayPalEnvironmentProduction", ppApp.configuration(), ppApp.onPrepareRender);
+		}	
+	},
+	onUserCanceled: function(result) {
+		//console.log(result);
+	}
+};
+
+</script>
+</body>
+</html>

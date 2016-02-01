@@ -1,0 +1,693 @@
+
+
+@font-face {
+	font-family: 'Proxima Nova Rg';
+	src: url('../fonts/ProximaNova-Bold.eot');
+	src: url('../fonts/ProximaNova-Bold.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/ProximaNova-Bold.woff') format('woff'),
+		url('../fonts/ProximaNova-Bold.ttf') format('truetype');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Proxima Nova Rg';
+	src: url('../fonts/ProximaNova-Regular.eot');
+	src: url('../fonts/ProximaNova-Regular.eot?#iefix') format('embedded-opentype'),
+		url('../fonts/ProximaNova-Regular.woff') format('woff'),
+		url('../fonts/ProximaNova-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+html,body {
+	font-family: 'Proxima Nova Rg';
+	font-weight: normal;
+	height: 100%;
+}
+/*.navbar-brand
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin: auto;
+}*/
+
+/* SideBar */
+
+#wrapper {
+  padding-left: 0px;
+  transition: all 0.4s ease 0s;
+}
+
+#sidebar-wrapper {
+  /*margin-left: -250px;*/
+  left: -100%;
+  width: 100%;
+  background: #f8f8f8;
+  position: fixed;
+  height: 100%;
+  overflow-y: auto;
+  z-index: 1000;
+  transition: all 0.4s ease 0s;
+}
+
+#wrapper.active {
+  padding-left: 0;
+}
+
+#wrapper.active #sidebar-wrapper {
+  left: 0;
+}
+
+html >.content {
+  width: 100%;
+}
+
+
+
+.sidebar-nav {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav li {
+  line-height: 40px;
+  text-indent: 20px;
+}
+
+.sidebar-nav li a {
+  color: #777777;
+  display: block;
+  text-decoration: none;
+  padding-left: 60px;
+}
+.sidebar-nav li.menu-heading a {
+	color: #337ab7;
+}
+
+.sidebar-nav li a span:before {
+  position: absolute;
+  left: 0;
+  color: #41484c;
+  text-align: center;
+  width: 20px;
+  line-height: 18px;
+}
+
+/*.sidebar-nav li a:hover,
+.sidebar-nav li.active {
+  color: #fff;
+  background: rgba(255,255,255,0.2);
+  text-decoration: none;
+}*/
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+  text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+  height: 65px;
+  line-height: 60px;
+  font-size: 18px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+  color: #999999;
+}
+
+.sidebar-nav > .sidebar-brand a:hover {
+  color: #fff;
+  background: none;
+}
+#menu-button {
+  margin: 0;
+  margin-left: 20px;
+  line-height: 65px;
+  display: inline-block;
+}
+p.pageTitle{
+	display:inline-block;
+	margin:0 0 0 15px;
+	font-size:26px;
+}
+
+#menu-toggle {
+    text-decoration: none;
+}
+.toggle-button {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+	z-index: 1000;
+	line-height: 0px;
+}
+.toggle-button i.fa {
+	color: #4ba61d;
+	font-size: 16px;
+}
+
+.btn-menu {
+  color: #000;
+} 
+
+/* SideBar */
+
+/*****end navigation*******/
+
+#navRight li{ border-bottom:1px solid #EEEEEE; }
+
+#navRight li a{ padding:2px 10px 2px 25px }
+#navRight li a.sub{ padding:2px 10px 2px 40px }
+
+#sp_cal button { margin:2px; width:40px; }
+
+#food-listing-page,
+#chef-listing-page {
+	margin-bottom: 105px;
+}
+#bottom-bar {
+	position:fixed;
+   left:0px;
+   bottom:0px;
+   /*height:30px;*/
+   width:100%;
+   background:#4ba61d;
+}
+.page-title {
+	text-transform: uppercase;
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+.no-padding {
+	padding: 0;
+}
+.no-lft-padding {
+	padding-left: 0px;
+}
+.no-right-padding {
+	padding-right: 0px;
+}
+
+.menu {
+	font-size: 15px;
+	margin-top: 12px;
+	color: #000;
+}
+.bar .icon {
+	font-size: 15px;
+	margin-top: 14px;
+	font-weight: normal;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	color: #4ba61d;
+}
+.bar .icon span {
+	font-size: 16px;
+	font-family: 'Proxima Nova Rg';
+	font-weight: normal;
+}
+
+.bar h1 {
+	font-size: 15px;
+}
+.table-view {
+	margin-top: 25px;
+	margin-bottom: 25px;
+	border: none;
+}
+.btn-positive {
+	background: #4ba61d;
+	border-color: #4ba61d;
+	margin-top: 30px;
+}
+#lgn-sign-page {
+	background: url(../images/form-bg.jpg);
+	background-size: cover;
+	height: 100%;
+	min-height: 100%;
+	width: 100%; 
+}
+
+.login-form .form-heading {
+	color: #fff;
+	text-transform: uppercase;
+	font-weight: bold;
+	margin-bottom: 30px;
+	margin-top: 15px;
+}
+
+#lgn-sign-page form {
+	padding: 15px;
+}
+#lgn-sign-page form .form-group {
+	margin-bottom: 20px;
+}
+#lgn-sign-page form .form-group .form-control {
+	border-radius: 0px;
+	background: #fff !important;
+	border-color: #fff;
+}
+#lgn-sign-page form .input-group-addon {
+	background: #fff;
+	border-radius:0px;
+	border-color: #fff;
+	border-right: 1px solid #bdbdbd;
+}
+#lgn-sign-page form .for-user i.fa {
+	font-size: 15px;
+}
+.btn-submit {
+	color: #fff;
+}
+
+#social-icon {
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+#social-icon h4 {
+	color: #fff;
+}
+#social-icon a {
+	display: inline-block;
+	text-transform: none;
+	margin-right: 5px;
+}
+
+#lgn-signUp-buton {
+	margin-top: 20px;
+	display: inline-block;
+	width: 100%;
+}
+
+#lgn-signUp-buton .btn-user {
+	background: transparent;
+	border: 1px solid #4ba61d;
+	margin-bottom: 0px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	color: #fff;
+}
+#lgn-signUp-buton .btn-sign-in {
+	border-right: none;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+#lgn-signUp-buton .btn-register {
+	border-left: none;
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+}
+#lgn-signUp-buton .btn-active {
+	background: #4ba61d;
+}
+.bar-tab {
+	border:none;
+}
+.tab-item {
+	width: 100%;
+	background: #4ba61d;
+	display: inline-block;
+	color: #fff;
+	position: relative;
+	padding: 10px;
+	text-align: center;
+	transition:all 0.3s ease 0s;
+	-webkit-transition:all 0.3s ease 0s;
+	-moz-transition:all 0.3s ease 0s;
+}
+.tab-item i.tab-icon {
+	color: #fff;
+	display: inline-block;
+}
+.tab-item img {
+	display: inline-block;
+}
+.tab-item:hover {
+	background: #277200;
+}
+.tab-item.active {
+	background: #277200;
+}
+.tab-item .border-image {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	height: 26px;
+	margin-top: -13px;
+}
+#foods,
+#chefs {
+	display: inline-block;
+}
+#foods .first-item,
+#chefs .first-item {
+	border-top: 1px solid #ddd;
+	padding-top: 10px;
+}
+.food-listing {
+	display: inline-block;
+	border-bottom: 1px solid #ddd;
+	margin-bottom: 10px;
+	width: 100%;
+}
+ .food-image-cont {
+	width: 14%;
+	padding-right: 15px;
+	padding-left: 15px;
+	display: inline-block;
+	float: left;
+}
+.food-info-cont {
+	width: 84%;
+	display: inline-block;'
+	float: left;
+}
+.food-info-body {
+	position: relative;
+}
+.food-info-body p {
+	margin-bottom: 5px;
+}
+
+	/* rating */
+
+.star-rating {
+	margin-top: 0px;
+	margin-bottom: 10px;
+}
+span.label.label-default{
+	background: transparent;
+	color: #333;
+	font-size: 14px;
+	font-weight: normal;
+	/*margin-left: 8px;*/	
+}
+.rating-symbol-foreground {
+	color: #4ba61d;
+}
+#chef-banner .rating-symbol-background .fa .fa-star-o {
+	color: #fff;
+}
+#chef-banner span.label.label-default{
+	background: transparent;
+	color: #fff;
+	font-size: 14px;
+	font-weight: normal;
+	/*margin-left: 8px;*/	
+}
+	/* rating */
+
+
+.food-info-body a {
+	color: #000;
+	font-weight: bold;
+	text-decoration: none;
+	transition:all 0.3s ease 0s;
+	-webkit-transition:all 0.3s ease 0s;
+	-moz-transition:all 0.3s ease 0s;
+}
+.byChef a{
+	color: #076796;
+	font-weight: normal;
+	text-decoration: none;
+	transition:all 0.3s ease 0s;
+	-webkit-transition:all 0.3s ease 0s;
+	-moz-transition:all 0.3s ease 0s;
+}
+
+.food-info-body p {
+	margin-bottom: 0px;
+}
+.food-info-body p.rating-stars {
+	margin-bottom: 15px;
+}
+.food-info-body a:hover {
+	color: #4ba61d;
+}
+
+.food-info-body p i.fa {
+	color: #4ba61d;
+	transition:all 0.3s ease 0s;
+	-webkit-transition:all 0.3s ease 0s;
+	-moz-transition:all 0.3s ease 0s;
+}
+.food-info-body p i.fa:hover {
+	color: #2c8400;
+}
+.food-info-body .food-price {
+	position: absolute;
+	bottom:5px;
+	right: 20px;
+	display: inline-block;
+}
+
+#chef-banner {
+	/*background: url(../images/chef-bg.jpg);
+	background-size: cover;*/ 
+	/*padding: px;*/
+	color: #333;
+	margin-top: -20px;
+	text-align: center;
+}
+#chef-banner .chef-banner-image {
+	/*height: 200px;
+	width: 100%;
+	display: inline-block;*/
+}
+#chef-banner .chef-banner-image .banner-img {
+	display: inline-block;
+	height: 200px;
+}
+/*#chef-banner .chef-profile-image {
+	width: 24%;
+	float: left;
+	padding: 15px;
+	border:1px solid #fff;
+	border-radius: 50%;
+	padding: 10px; 
+}*/
+#chef-banner .chef-profile-info {
+	/*width: 76%;
+	padding: 15px;
+	float: left;*/
+	padding: 15px 0px;
+}
+/*#chef-banner img {
+	display: inline-block;
+}*/
+#chef-banner h3 {
+	
+}
+#chef-banner p {
+	text-transform: uppercase;
+	margin: 0px;
+	color: #fff;
+	font-size: 12px;
+	margin-top: 10px;
+}
+#chef-banner p.rating-stars {
+	display: inline-block;
+	background: #fff;
+	padding: 5px;
+}
+#chef-banner p.chef-rating {
+	margin-top: 0px;
+}
+#chef-banner p.chef-rating i.fa {
+	color: #fff;
+}
+#chef-info-cont { 
+	background: #eeeeee;	
+	margin-top:8px;
+}
+#chef-info-cont .chef-info {
+	padding: 0px 0px;
+	text-align: center;
+}
+.chef-info-box h3{
+	margin:8px 0 5px 0;
+} 
+#chef-info-cont .chef-info-box {
+	/*display: inline-block;*/
+	padding: 0px 10px 0px 5px;
+	border-right:1px solid #d0d0d0;
+	color: #333;
+}
+#chef-info-cont .last-info-box {
+	border:none;
+}
+#chef-address-container .chef-address {
+	padding: 20px 0px;
+	display: inline-block;
+	width: 100%;
+	color: #333;
+	border-bottom: 1px solid #797979;
+}
+#chef-address-container .chef-address .chef-address-icon {
+	width: 5%;
+	display: inline-block;
+	float: left;
+}
+#chef-address-container .chef-address .chef-address-icon i.fa {
+	color: #7bba63; 
+}
+
+#chef-address-container .chef-address .ch-address {
+	width: 95%;
+	display: inline-block;
+	float: left;
+}
+#chef-address-container .chef-address .ch-address p{
+	margin-bottom: 0px;
+}
+#chef-foods {
+	/*display: inline-block;*/
+	margin-top: 25px;
+}
+
+#user-banner {
+	background: #4ba61d;
+	margin-top: -20px;
+	
+}
+#user-banner .user-image-container {
+	position: relative;
+	padding: 30px 0px;
+	z-index: 999;
+}
+#user-banner .user-image-container .user-image {
+	width: 91px;
+	height: 91px;
+	border:3px solid #fff;
+	border-radius: 50%;
+	position: absolute;
+	left: 50%;
+	margin-left: -45px;
+	bottom:-80%;
+}
+#user-form {
+	margin-top: 5px;
+	z-index: 99;
+	padding: 15px;
+}
+#user-from .form-control {
+	padding: 0px;
+}
+#user-form label {
+	font-family: 'Proxima Nova Rg';
+	font-weight: normal;
+}
+@media (max-width: 768px) {
+	.food-info-cont {
+		width: 86%;
+		display: inline-block;
+		float: left;
+	}
+	.food-image-cont {
+		width: 12%;
+		display: inline-block;
+		float: left;
+	}
+}
+@media (max-width: 760px) {
+	.navbar-brand
+	{
+		display: none;
+	}
+}
+@media (max-width: 480px) {
+	.food-image-cont {
+		width: 18%;
+		display: inline-block;
+		float: left;
+	}
+	.food-info-cont {
+		width: 80%;
+		display: inline-block;
+		float: left;
+	}
+}
+@media (max-width: 360px) {
+	.food-image-cont {
+		width: 24%;
+		display: inline-block;
+		float: left;
+	}
+	.food-info-cont {
+		width: 74%;
+		display: inline-block;
+		float: left;
+	}
+	/*#chef-banner .chef-profile-image {
+		width: 32%;
+		float: left;
+		padding: 10px;
+	}
+	#chef-banner .chef-profile-info {
+		width: 68%;
+		padding: 15px;
+		float: left;
+	}*/
+}
+@media (max-width: 320px) {
+	#chef-info-cont .chef-info-box p{
+		font-size: 12px;
+	}
+	.food-image-cont {
+		width: 26%;
+		display: inline-block;
+		float: left;
+	}
+	.food-info-cont {
+		width: 72%;
+		display: inline-block;
+		float: left;
+	}
+	/*#chef-banner .chef-profile-image {
+		width: 36%;
+		float: left;
+		padding: 10px;
+	}
+	#chef-banner .chef-profile-info {
+		width: 64%;
+		padding: 15px;
+		float: left;
+	}*/
+}
+
+
+
+input.error{ color:#B00; background-color:#FDD }
+
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 10px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+  text-align:center; 
+  text-transform:uppercase;
+}
+
+.form-group.col-xs-6 {
+    padding-left: 0;
+}
+.form-group.col-xs-6.last {
+    padding-right: 0;
+}

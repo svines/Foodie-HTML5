@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Foodie</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Include the compiled Ratchet CSS -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+<style>
+html, body {
+	height: 100%;
+}
+</style>
+</head>
+<body id="wrapper">
+<div id="sidebar-wrapper">
+	<nav id="nav">
+		<ul class="sidebar-nav nav" id="navRight">
+			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
+			<li><a class="sub" href="map.html">Chefs</a></li>
+			<li><a class="sub" href="user-profile.html">My Profile</a></li>
+			<li><a class="sub" href="reservations.html">My Orders</a></li>
+		</ul>
+	</nav>
+</div>
+<div class="content" style="height:100%; padding-bottom:90px;">
+	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
+		<p class="pageTitle">Search Chefs</p>
+	</h1>
+	<div id="map" style="height:100% ;"></div>
+</div>
+<div id="bottom-bar">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-4 no-padding"> <a class="tab-item active" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-4 no-padding"> <a class="tab-item" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+		</div>
+	</div>
+</div>
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="http://maps.google.com/maps/api/js?sensor=true" type="text/javascript"></script> 
+<script src="js/common.js"></script> 
+<script>
+
+$(document).ready(function(e) {
+	
+	$('a.aResv').on('click',function(){
+		localStorage.setItem('view_chef_id', $(this).prop('rel'));
+		document.location = 'chef_profile.html';
+	});
+	
+	var formData = 'lat='+localStorage.getItem("lat")+'&lng='+localStorage.getItem("lng")+'&user_id='+localStorage.getItem("userId")+'&app_token='+localStorage.getItem("userToken");
+	$.ajax({
+		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=initApp",
+		data: formData,
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			//console.log(data.Chefs);
+			localStorage.setItem('nearbyChefs', data.nearbyChefs );
+			localStorage.setItem('nearbyChefsCount', data.nearbyChefsCount );
+			localStorage.setItem('chefStatus', data.chefStatus );
+			localStorage.setItem('chefData', data.chefData );
+			loadMarkers();
+		}else{ 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+		
+	}); // ajax	
+	
+});
+
+
+  /**/
+  
+  
+	var mapOptions = {
+		center: new google.maps.LatLng( localStorage.getItem('lat') , localStorage.getItem('lng') ),
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoom:9,
+		scrollwheel: false,
+	};
+					 
+    var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    var infowindow = new google.maps.InfoWindow({maxWidth: 400});
+
+	var myloc = new google.maps.Marker({
+		clickable: false,
+		icon: new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png', new google.maps.Size(22,22), new google.maps.Point(0,18), new google.maps.Point(11,11)),
+		shadow: null,
+		zIndex: 999,
+		map: map
+	});
+  
+
+	var image = {
+    url: '/media/m2.png',
+    // This marker is 20 pixels wide by 32 pixels high.
+    size: new google.maps.Size(24, 24),
+    // The origin for this image is (0, 0).
+    origin: new google.maps.Point(0, 0),
+    // The anchor for this image is the base of the flagpole at (0, 32).
+    anchor: new google.maps.Point(12, 12)
+  	};
+
+   var marker, i, chef;
+	var jsonData;
+	var markersArray = [];
+	
+	loadMarkers();
+	
+	
+if (navigator.geolocation) navigator.geolocation.watchPosition(function(pos) {
+    var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+    myloc.setPosition(me);
+}, function(error) {
+    // ...
+});	
+
+function loadMarkers(){
+	
+	for (var i = 0; i < markersArray.length; i++ ) {
+		markersArray[i].setMap(null);
+	}
+	markersArray.length = 0;
+	
+	if( localStorage.getItem('nearbyChefsCount') > 0 ){
+		var jsonData = JSON.parse(localStorage.getItem('nearbyChefs'));
+		for (var i = 0; i < jsonData.length; i++) {
+			chef = jsonData[i];
+			marker = new google.maps.Marker({
+				position: new google.maps.LatLng( chef.lat, chef.lng),
+				map: map,
+				//icon: image,
+			});
+			markersArray.push(marker);
+			google.maps.event.addListener(marker, 'click', (function(marker, i) {
+				return function() {
+					var r = 0;
+					var r2 = '0.0'; 
+					if( jsonData[i].rating_count > 0 ){
+						r = jsonData[i].rating_sum /  jsonData[i].rating_count;
+						r2 = r.toFixed(1); 
+						r = (Math.round(r * 2) / 2).toFixed(1);
+					}
+					ri = '<img src="images/'+r+'.gif" alt="" /> ('+ r2 + '/5)<br>In '+jsonData[i].rating_count+' Reviews' ;
+					var c = '';
+					if(!empty(jsonData[i].image1)){
+						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'"><img src="http://mobileapi.foodiesys.com/foodie-mssql/pics/'+jsonData[i].image1+'" class="img-rounded" style="width:100%;"  /></a></div>';
+					}else{
+						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'"><img src="images/no-pic3.jpg" class="img-rounded" style="width:100%;"  /></a></div>';
+					}	
+						c = c +	'<div class="col-xs-7 no-padding"><strong><a href="chef_profile.html?id='+jsonData[i].id+'">'+jsonData[i].company+'</a></strong><br />People Served: '+jsonData[i].people_served+'<br>Food Cost: '+jsonData[i].food_cost+'<br />';
+						c = c +	ri+'</div><div class="clearfix"></div><strong>Address:</strong> '+jsonData[i].address+', '+jsonData[i].city+' '+jsonData[i].state+' '+jsonData[i].zip;
+						//c = c +  '<a href="#" rel="'+jsonData[i].id+'" class="btn btn-xs btn-primary pull-right aResv">Reservation</a>';
+					infowindow.setContent(c);
+					infowindow.open(map, marker);
+				}
+			})(marker, i));	
+		}
+		
+	}	
+}
+
+
+
+	 
+/**/
+</script>
+</body>
+</html>

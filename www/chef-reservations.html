@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Foodie</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+</head>
+<body id="wrapper">
+<div id="sidebar-wrapper">
+	<nav id="nav">
+		<ul class="sidebar-nav nav" id="navRight">
+			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
+			<li><a class="sub" href="map.html">Chefs</a></li>
+			<li><a class="sub" href="user-profile.html">My Profile</a></li>
+			<li><a class="sub" href="reservations.html">My Orders</a></li>
+		</ul>
+	</nav>
+</div>
+
+<!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
+<div id="chef-page" class="content">
+	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a> 
+	<p class="pageTitle">Chef Reservations</p>
+	</h1>
+	
+	<div class="text-center">
+		<button id="btnScan" class="btn btn-primary"><i class="fa fa-qrcode"></i> &nbsp; Scan QR</button>
+	</div>
+	<div id="chef-foods">
+		<div class="food-listing hidden">
+			<div class="food-image-cont"> <button type="button" class="btn btn-info btn-circle btn-lg"></button> </div>
+			<div class="food-info-cont">
+				<div class="food-info-body">
+					<h4 class="dishTitle">..</h4>
+					<!--<div class="byChef pull-right">..</div>-->
+					<p class="dishInfo"></p>
+				</div>
+			</div>
+		</div>
+		<div class="aLoading text-center" style="display:none"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
+	</div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<div class="modal fade" id="popUser" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="popUserTitle">Order Details</h4>
+			</div>
+			<div class="modal-body"> </div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="popFinish" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="popFinishTitle">Finish Order</h4>
+			</div>
+			<div class="modal-body">
+				<p>Please get the reservation code from guest and enter below to complte order and transfer payment.</p>
+				
+				<form method="post" id="frmF">
+					<div class="form-group">
+						<label class="">Reservation Key</label>
+						<div class="">
+							<input type="text" name="Fcode" id="Fcode" class="form-control required">
+						</div>
+					</div>
+					<input type="hidden" name="res_id" id="res_id" class="form-control required">
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+				<button type="button" class="btn btn-success finishGo">OK</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+<!-- Script --> 
+<script src="cordova.js"></script>
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/bootstrap.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script>
+<script src="js/moment.min.js"></script>  
+<script src="js/common.js"></script> 
+<script>
+
+var resData;
+
+$(document).ready(function(e) {
+
+	loadReservations();
+	
+	$('#chef-foods').on('click', '.btnDetail',function(){
+		var orderId = $(this).data('id') ;
+		var thisOrder ;
+		for (var i = 0; i < resData.length; i++) {
+			if( resData[i].id == orderId ){
+				thisOrder = resData[i];
+				break; 	
+			}
+		}
+		var H = '<h4>From,</h4><strong>'+thisOrder.first_name+' '+thisOrder.last_name+'</strong><br />'+thisOrder.email+'<br />'+thisOrder.phone+'<br />';
+		H += '<h4>Detail :</h4>';
+		H += 'Order Id : '+ resData[i].id +' &nbsp; &nbsp; Persons : '+ resData[i].persons +' <br />' ;
+		H += 'Order Total : $'+ thisOrder.order_total +'<br />' ;
+		H += 'Payment status : <strong>'+resData[i].status+'</strong><br />';
+		
+		var mo = moment( thisOrder.order_date+' '+thisOrder.order_time, 'YYYY-MM-DD HH:mm:ss' );
+		H += 'Time : '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'<br />';
+		H += '<h4>Dishes :</h4><table class="table table-responsive">';
+		H += '<tr><th>#</th><th>Dish</th><th>Qty</th><th>Price</th></tr>';
+		var T = 0;
+		for (var i = 0; i < thisOrder.dishes.length; i++) {
+			T = T + parseFloat(thisOrder.dishes[i].qty) * parseFloat(thisOrder.dishes[i].price);
+			H += '<tr><td>'+(i+1)+'</td><td>'+thisOrder.dishes[i].dish_name+'</td><td>'+thisOrder.dishes[i].qty+'</td><td>$'+thisOrder.dishes[i].price+'</td></tr>';	
+		}
+		H += '<tr><td></td><td></td><td><strong>TOTAL</strong></td><td><strong>$'+T.toFixed(2)+'</strong></td></tr>';	
+		H += '</table>';
+		
+		$('#popUser .modal-body').html(H);
+		$('#popUser').modal();
+	});
+	
+	$('#chef-foods').on('click', '.btnFinish',function(){
+		$('#res_id').val( $(this).data('rid') );
+		$('#popFinish').modal();
+	});
+	
+	$('.finishGo').on('click',function(){
+		$('#frmF').submit();
+	});
+	
+	$('#frmF').validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+			
+			formData = $(form).serialize();
+			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+			$.ajax({
+				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=finishOrder", data: formData,
+				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					$('#popFinish').modal('hide');
+					BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
+					BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
+					BAlert.modal();
+					BAlert.find('.btn-primary').on('click',function(){ document.location = 'chef-reservations.html'; });
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				if (data.JS) { eval(data.JS); }
+			
+			}); // ajax	
+					
+		}// submit handler
+	});
+		
+	
+	$('#btnScan').on('click',function(){
+		try{
+			//cloudSky.zBar.scan({text_title:'Foodie', flash: "off"}, QRonSuccess, QRFailure);
+			cordova.plugins.barcodeScanner.scan(QRonSuccess, QRFailure);
+		}catch(err) {
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">Unable to process QR code!</p>');
+			BAlert.modal();	
+		}
+	});
+
+});
+
+function QRonSuccess(result){
+	
+	if( result.cancelled == true ){
+		return false; 	
+	}				 
+	var code = result.text;
+	if(code.charAt(0) == 'F'){
+		code = code.substr(1);	 // Remove F
+		code = code.split(':');
+		var id = parseInt(code[0]);
+		var key = parseInt(code[1]);
+		if(empty(id) || empty(key)){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">Invalid QR code for Foodie!</p>');
+			BAlert.modal();		
+		}else{
+		
+			formData = 'Fcode='+key+'&res_id='+id;
+			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+			$.ajax({
+				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=finishOrder", data: formData,
+				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					$('#popFinish').modal('hide');
+					BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
+					BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
+					BAlert.modal();
+					BAlert.find('.btn-primary').on('click',function(){ document.location = 'chef-reservations.html'; });
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				if (data.JS) { eval(data.JS); }
+			
+			}); // ajax	
+		
+		
+			
+		}
+	}else{
+		BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+		BAlert.find('.modal-body').html('<p class="text-danger">Invalid QR code for Foodie!</p>');
+		BAlert.modal();	
+	} 
+}
+function QRFailure(message){
+	BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+	BAlert.find('.modal-body').html('<p class="text-danger">Unable to process QR code: '+message+'</p>');
+	BAlert.modal();	
+}
+
+function loadReservations(){
+	formData = 'user_id='+ localStorage.getItem('userId');
+	formData += '&userToken='+ localStorage.getItem('userToken');
+	$.ajax({
+		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getChefReservations", data: formData,
+		beforeSend: function() { $('div.aLoading').show();  },
+		complete: function() { $('div.aLoading').hide(); },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			if(data.Count > 0 ){
+				resData = data.Reservations;
+				$DTemp = $('.food-listing');
+				for (var i = 0; i < resData.length; i++) {
+					$copy = $DTemp.clone().removeClass('hidden');
+					var C = resData[i].first_name.charAt(0)+resData[i].last_name.charAt(0);
+					$copy.find('.btn-circle').html(C);
+					
+					$copy.find('h4.dishTitle').html(resData[i].first_name + ' '+resData[i].last_name  + '<button class="btn btn-default btn-sm btnDetail pull-right" data-id="'+resData[i].id+'">Order Details</button>');
+					
+					
+					//$copy.find('div.byChef').html( 'Persons : '+resData[i].persons  );
+					//$copy.find('div.byChef').html( '<button class="btn btn-default btn-sm btnDetail" data-id="'+resData[i].id+'">Order Details</button>'  );
+					
+					var H = '';
+					
+					H += 'Order Total : $'+ parseFloat(resData[i].order_total).toFixed(2) +'<br />' ;
+					H += 'Payment status : <strong>'+resData[i].status+'</strong> ';
+					if( resData[i].status == 'Paid' ){
+						H += '<button class="btn btn-xs btnFinish pull-right" data-rid="'+resData[i].id+'"><i class="fa fa-check"></i> Finish Order </button>';
+					}
+					
+					var mo = moment( resData[i].order_date+' '+resData[i].order_time, 'YYYY-MM-DD HH:mm:ss' );
+					//H += '<h4>Time : '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'</h4>';
+					H += '<h4>Time: '+ mo.format('MMM D, YYYY (ddd) [at] h:mma') +'</h4>';
+					
+					$copy.find('p.dishInfo').html( H );
+					
+					
+											
+					
+					$copy.appendTo('#chef-foods');
+				}
+				//$DTemp.remove();
+			}else{
+				$('#chef-foods').html('<center>No Rocord Found!</center>');
+			}
+		}else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+	
+	}); // ajax	
+}
+
+</script>
+</body>
+</html>
