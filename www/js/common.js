@@ -126,6 +126,5 @@ $(document).ready(function(e) {
 		$("#wrapper").toggleClass("active");
 		$(".fa").toggleClass('fa-bars fa-remove');
 		$(this).toggleClass('toggle-button');
-		//console.log('#menu-toggle');
 	});
 });
