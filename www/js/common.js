@@ -115,7 +115,7 @@ function initMenu(){
 		$('#navRight').append('<li class="DYN"><a class="sub" href="chef-calendar-set.html">Schedule</a></li>');
 		$('#navRight').append('<li class="DYN"><a class="sub" href="chef-reservations.html">Chef Reservations</a></li>');
 	}
-	$('#navRight').append('<li class="DYN"><a href="about.html">Abuout Foodie</a></li>');
+	$('#navRight').append('<li class="DYN"><a href="about.html">About Foodie</a></li>');
 	$('#navRight').append('<li class="DYN"><a href="register.html?do=logout">Logout</a></li>');
 }
 
