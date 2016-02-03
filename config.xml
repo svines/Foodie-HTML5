@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ewebcraft.foodie" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" >
+<widget id="com.foodiesys.foodieapp" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" >
 
     <name>Foodie</name>
-    <description>Foodie App</description>
-    <author href="http://ewebcraft.com" email="atifrashid@hotmail.com">Atif Rashid</author>
+    <description>Foodie Mobile App</description>
+    <author href="http://www.FoodieSys.com" email="alex@foodiesys.com">Alex Barenboim</author>
 
 	<access origin="*" />
 	<allow-intent href="*" />
