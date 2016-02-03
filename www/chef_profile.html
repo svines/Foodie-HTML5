@@ -513,7 +513,7 @@ var ppApp = {
 	initPaymentUI: function() {
 		//alert('initPaymentUI');
 		var clientIDs = {
-			"PayPalEnvironmentProduction": "ASOpOwfV9I_K7EjISTD8r3m5EHxPsxwtg_EogWy8chFwob3LnsAfqkuFcnVLDKt0j3zIuHEeKSsR8KJu",
+			"PayPalEnvironmentProduction": "Abd6gqI-wgpVBdCHvBhYEuJZZtFL7ybnizVC0eOyVnBTWc--CyUf7dE44ZsVkF4pZdz6SkO2GAg4sf1c",
 			"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
 		};
 		try {
@@ -571,7 +571,7 @@ var ppApp = {
 		// must be called
 		// use PayPalEnvironmentNoNetwork mode to get look and feel of the flow
 		//alert('onPayPalMobileInit');
-		if( localStorage.getItem('userId') == '13' ){
+		if( localStorage.getItem('userId') == '-13' ){
 			PayPalMobile.prepareToRender("PayPalEnvironmentSandbox", ppApp.configuration(), ppApp.onPrepareRender);
 		}else{
 			PayPalMobile.prepareToRender("PayPalEnvironmentProduction", ppApp.configuration(), ppApp.onPrepareRender);
