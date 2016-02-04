@@ -2,7 +2,7 @@
 <widget id="com.foodiesys.foodieapp" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" >
 
     <name>Foodie</name>
-    <description>Foodie Mobile App</description>
+    <description>Authentic and Specialized Cuisine by Local Chefs</description>
     <author href="http://www.FoodieSys.com" email="alex@foodiesys.com">Alex Barenboim</author>
 
 	<access origin="*" />
