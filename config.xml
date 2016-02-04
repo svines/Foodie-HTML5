@@ -4,6 +4,8 @@
     <name>Foodie</name>
     <description>Authentic and Specialized Cuisine by Local Chefs</description>
     <author href="http://www.FoodieSys.com" email="alex@foodiesys.com">Alex Barenboim</author>
+    
+    <preference name="permissions" value="none"/>
 
 	<access origin="*" />
 	<allow-intent href="*" />
