@@ -32,6 +32,7 @@
 	
 	<platform name="ios">
     		<icon src="foodie-logo-57x57.png" width="57" height="57" />
+    		<icon src="foodie-logo-72x27.png" width="72" height="72" />
 	</platform>
 	
 </widget>
