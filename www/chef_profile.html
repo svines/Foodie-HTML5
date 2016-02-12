@@ -182,11 +182,15 @@
 <div id="bottom-bar">
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-4 no-padding"> <a class="tab-item " href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> 
-				<!-- <i class="fa fa-map-o tab"></i> --> 
-				<img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-4 no-padding"> <a class="tab-item active" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			<span id="footerLinksNormal">
+				<div class="col-xs-4 no-padding"> <a class="tab-item" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+				<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+				<div class="col-xs-4 no-padding"> <a class="tab-item active" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			</span>
+			<span id="footerLinksNoLogin">
+				<div class="col-xs-6 no-padding"> <a class="tab-item active" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+				<div class="col-xs-6 no-padding"> <a class="tab-item" href="register.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			</span>
 		</div>
 	</div>
 </div>
@@ -211,6 +215,15 @@ var OrderId = null;
 var chef_id = null;
 
 $(document).ready(function(e) {
+
+	if( empty(localStorage.getItem('userId'))){
+		$('#footerLinksNormal').hide();
+		$('#footerLinksNoLogin').show();
+		$('#menu-toggle').addClass('disabled');
+	}else{
+		$('#footerLinksNoLogin').hide();
+		$('#footerLinksNormal').show();
+	}
 
 	chef_id = getUrlParameter('id');
 	var chef_data;
@@ -275,8 +288,14 @@ $(document).ready(function(e) {
 	
 	loadDishes(chef_id);
 	
-	
 	$('#btnStartOrder').on('click',function(){
+		
+		if( empty(localStorage.getItem('userId'))){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">In order to place an order, you need to login or register to to the app. Please tap <a href="register.html?ret='+chef_id+'">HERE</a> to login/register!</p>');
+			BAlert.modal();
+			return false;
+		}
 		
 		var user_profile_complete = false;
 		if( !empty(localStorage.getItem('userData'))){
@@ -331,7 +350,7 @@ $(document).ready(function(e) {
 		}else{
 			formData = 'chef_id='+chef_id+'&quantity='+ $('#d_quantity').val()+'&d_date='+thisDate+'&d_time='+$('#d_time').val();
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=checkAvailable", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=checkAvailable", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
@@ -414,7 +433,7 @@ $(document).ready(function(e) {
 			
 			
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=Reserve2", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=Reserve2", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
@@ -456,7 +475,7 @@ function loadDishes(chef_id){
 	formData = 'chef_id='+chef_id+'&DishAv=1';
 	//console.log(formData);
 	$.ajax({
-		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getDishes", data: formData,
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getDishes", data: formData,
 		beforeSend: function() { $('div.aLoading').show();  },
 		complete: function() { $('div.aLoading').hide(); },
 	}).fail(  ajaxError )
@@ -528,7 +547,7 @@ var ppApp = {
 		var formData = 'paypal_id='+payment.response.id+'&paypal_status='+payment.response.state+'&res_id='+OrderId;
 		formData += '&user_id=' + localStorage.getItem('userId') + '&userToken=' + localStorage.getItem('userToken');
 		$.ajax({
-			type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=reserveApproved", data: formData,
+			type: "POST", dataType: 'json', url: ServerAjax+"?h=reserveApproved", data: formData,
 			beforeSend: function() { $('div.aLoading').show();  },
 			complete: function() { $('div.aLoading').hide(); },
 		}).fail(  ajaxError )

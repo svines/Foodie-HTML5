@@ -232,7 +232,7 @@ $("#user-form").validate({
 			formData = $(form).serialize();
 			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=userUpdate", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=userUpdate", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )

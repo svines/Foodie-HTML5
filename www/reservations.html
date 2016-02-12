@@ -197,7 +197,7 @@ $(document).ready(function(e) {
 			formData = $(form).serialize();
 			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=rateChef", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=rateChef", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
@@ -227,7 +227,7 @@ function loadReservations(){
 	formData = 'user_id='+ localStorage.getItem('userId');
 	formData += '&userToken='+ localStorage.getItem('userToken');
 	$.ajax({
-		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getReservations", data: formData,
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getReservations", data: formData,
 		beforeSend: function() { $('div.aLoading').show();  },
 		complete: function() { $('div.aLoading').hide(); },
 	}).fail(  ajaxError )

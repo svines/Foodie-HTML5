@@ -20,6 +20,7 @@
 html, body {
 	height: 100%;
 }
+
 </style>
 </head>
 <body id="wrapper">
@@ -42,9 +43,15 @@ html, body {
 <div id="bottom-bar">
 	<div class="container">
 		<div class="row">
+			<span id="footerLinksNormal">
 			<div class="col-xs-4 no-padding"> <a class="tab-item active" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
 			<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
 			<div class="col-xs-4 no-padding"> <a class="tab-item" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			</span>
+			<span id="footerLinksNoLogin">
+			<div class="col-xs-6 no-padding"> <a class="tab-item" href="register.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			<div class="col-xs-6 no-padding"> <a class="tab-item active" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			</span>
 		</div>
 	</div>
 </div>
@@ -57,19 +64,6 @@ html, body {
 
 var myloc = null;
 
-document.addEventListener("deviceready", onDeviceReady, false);
-
-$(document).ready(function(e) {
-	onDeviceReady();
-});
-
-function onDeviceReady() {
-	if (!navigator.geolocation){
-		console.log('Geolocation not  available');
-	}else{
-		navigator.geolocation.watchPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });
-	}
-}
 
 function onShortError(error){
 	console.log(error);
@@ -77,12 +71,20 @@ function onShortError(error){
 function showPosition(pos){
 	var me = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
 	if(!empty(myloc)){
-		//console.log(pos.coords.latitude);
 		myloc.setPosition(me);
 	}
 }
 
 $(document).ready(function(e) {
+	
+	if( empty(localStorage.getItem('userId'))){
+		$('#footerLinksNormal').hide();
+		$('#footerLinksNoLogin').show();
+	}else{
+		$('#footerLinksNoLogin').hide();
+		$('#footerLinksNormal').show();
+	}
+	
 	
 	$('a.aResv').on('click',function(){
 		localStorage.setItem('view_chef_id', $(this).prop('rel'));
@@ -91,7 +93,7 @@ $(document).ready(function(e) {
 	
 	var formData = 'lat='+localStorage.getItem("lat")+'&lng='+localStorage.getItem("lng")+'&user_id='+localStorage.getItem("userId")+'&app_token='+localStorage.getItem("userToken");
 	$.ajax({
-		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=initApp",
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=initApp",
 		data: formData,
 	}).fail(  ajaxError )
 	.done(function(data){
@@ -166,8 +168,8 @@ function loadMarkers(){
 			marker = new google.maps.Marker({
 				position: new google.maps.LatLng( chef.lat, chef.lng),
 				map: map,
-				//icon: image,
 			});
+			marker.setIcon('http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+chef.company.charAt(0)+'|E44744|000000');
 			markersArray.push(marker);
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 				return function() {
@@ -198,6 +200,11 @@ function loadMarkers(){
 }
 
 
+if (!navigator.geolocation){
+	console.log('Geolocation not  available');
+}else{
+	navigator.geolocation.watchPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });
+}
 
 	 
 /**/

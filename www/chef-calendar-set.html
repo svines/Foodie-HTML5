@@ -346,7 +346,7 @@ $(document).ready(function(e) {
 		formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 		//console.log(formData);
 		$.ajax({
-			type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=saveCal", data: formData,
+			type: "POST", dataType: 'json', url: ServerAjax+"?h=saveCal", data: formData,
 			beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 			complete: function() { waitingDialog.hide(); },
 		}).fail(  ajaxError )
@@ -390,7 +390,7 @@ function updateCalTbody(){
 function loadDishes(){
 	formData = 'chef_id='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken')+'&DishAv=1'; 
 	$.ajax({
-		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getDishes", data: formData,
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getDishes", data: formData,
 		beforeSend: function() { $('div.aLoading').show();  },
 		complete: function() { $('div.aLoading').hide(); },
 	}).fail(  ajaxError )

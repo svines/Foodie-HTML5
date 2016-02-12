@@ -55,7 +55,7 @@
 		</div>
 		<div class="form-group">
 			<label for="">Paypal Email</label>
-			<input class="form-control required" type="email" name="email" value="" placeholder="Paypal Email">
+			<input class="form-control required email" type="email" name="email" value="" placeholder="Paypal Email">
 			<p class="help-block">Enter your corporate PayPal email address where you will receive Foodie payments.</p>
 		</div>
 		<div class="form-group">
@@ -132,10 +132,16 @@
 			<input class="form-control required" type="text" name="zip" value="" id="zip" placeholder="Zip">
 		</div>
 		
-		<div class="form-group col-xs-6 ">
+		<div class="form-group">
 			<label for="">Seating Capacity</label>
 			<input class="form-control required" type="number" name="capacity" value="" id="capacity" placeholder="Seating Capacity">
 		</div>
+		
+		<div class="form-group">
+			<label for="">Referral Email (Optional)</label>
+			<input id="txtReferalEmail" class="form-control required email" type="email" name="referral_email" value="" placeholder="Referral Email">
+		</div>
+		
 		<input type="hidden" name="image1" id="hd_image1" value="" />
 		<input type="hidden" name="image2" id="hd_image2" value="" />
 		
@@ -155,9 +161,9 @@ $(document).ready(function(e) {
 	
 	setSubmitButton();
 	
-	var formData = '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+	var formData = 'lat='+localStorage.getItem("lat")+'&lng='+localStorage.getItem("lng")+'&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 	$.ajax({
-		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getChefProfile", data: formData,
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getChefProfile", data: formData,
 		beforeSend: function() { $('#aLoading').show();  },
 		complete: function() { $('#aLoading').hide(); },
 	}).fail(  ajaxError )
@@ -193,7 +199,7 @@ $(document).ready(function(e) {
 			formData = $(form).serialize();
 			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=chefUpdate", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=chefUpdate", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
@@ -310,8 +316,10 @@ function setSubmitButton(){
 	$('#btnSubmit').removeClass('disabled');
 	if(localStorage.getItem('chefStatus')== '1' ){ // pending approval
 		$('#btnSubmit').html('Pending Approval').addClass('disabled');
+		$('#txtReferalEmail').prop('disabled', true)
 	}else if(localStorage.getItem('chefStatus')== '2' ){ // approved/active
 		$('#btnSubmit').html('UPDATE');
+		$('#txtReferalEmail').prop('disabled', true);
 	}
 }
 

@@ -72,6 +72,19 @@
 		<a href="#"><img src="images/facebook.png" alt="facebook"></a> <a href="#"><img src="images/twitter.png" alt="twitter"></a> </div>
 </div>
 
+
+<div id="bottom-bar">
+	<div class="container">
+		<div class="row">
+			
+			<div class="col-xs-6 no-padding"> <a class="tab-item active" href="register.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			<div class="col-xs-6 no-padding"> <a class="tab-item" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			
+		</div>
+	</div>
+</div>
+
+
 <script src="js/jquery-1.11.3.min.js"></script>
 <script src="js/jquery.validate.min.js"></script> 
 <script src="js/bootstrap.min.js"></script>
@@ -79,7 +92,12 @@
 <!--<script src="js/ratchet.js"></script>--> 
 <script src="js/common.js"></script> 
 <script>
+
+var RetPage = null;
+
 $(document).ready(function(e) {
+	
+	RetPage = getUrlParameter('ret');
 	
 	if( getUrlParameter('do') == 'logout' ){
 		localStorage.removeItem('chefData');
@@ -111,7 +129,7 @@ $(document).ready(function(e) {
 			}else{
 				formData = $(form).serialize();
 				$.ajax({
-					type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=register", data: formData,
+					type: "POST", dataType: 'json', url: ServerAjax+"?h=register", data: formData,
 					beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 					complete: function() { waitingDialog.hide(); },
 				}).fail(  ajaxError )
@@ -121,7 +139,13 @@ $(document).ready(function(e) {
 						localStorage.setItem('userToken', data.userToken );
 						localStorage.setItem('userData', data.userData );
 						localStorage.removeItem('chefStatus');
-						document.location = 'map.html';
+						
+						if(!empty(RetPage)){
+							document.location = 'chef_profile.html?id='+RetPage;
+						}else{
+							document.location = 'map.html';
+						}
+							
 					} else { 
 						BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
 						BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
@@ -139,7 +163,7 @@ $(document).ready(function(e) {
 		submitHandler: function(form) {
 			formData = $(form).serialize();
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=login", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=login", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
@@ -150,7 +174,13 @@ $(document).ready(function(e) {
 					localStorage.setItem('chefData', data.chefData );
 					localStorage.setItem('userToken', data.userToken );
 					localStorage.setItem('chefStatus', data.chefStatus );
-					document.location = 'map.html';
+					
+					if(!empty(RetPage)){
+						document.location = 'chef_profile.html?id='+RetPage;
+					}else{
+						document.location = 'map.html';
+					}
+					
 				} else { 
 					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
 					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');

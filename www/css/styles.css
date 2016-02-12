@@ -662,6 +662,9 @@ span.label.label-default{
 }
 
 
+#footerLinksNormal, #footerLinksNoLogin {
+	display:none; 
+}
 
 input.error{ color:#B00; background-color:#FDD }
 

@@ -171,7 +171,7 @@ $(document).ready(function(e) {
 			formData = $(form).serialize();
 			formData += '&userToken=' + localStorage.getItem('userToken');
 			$.ajax({
-				type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=addEditDish", data: formData,
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=addEditDish", data: formData,
 				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 				}).fail(  ajaxError
@@ -204,7 +204,7 @@ function loadDishes(chef_id){
 	console.log(formData);
 	$('div.food-listing').not(':first').remove();
 	$.ajax({
-		type: "POST", dataType: 'json', url: "http://mobileapi.foodiesys.com/foodie-mssql/ajax.php?h=getDishes", data: formData,
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getDishes", data: formData,
 		beforeSend: function() { $('div.aLoading').show();  },
 		complete: function() { $('div.aLoading').hide(); },
 	}).fail(  ajaxError )
