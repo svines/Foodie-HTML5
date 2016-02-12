@@ -82,7 +82,11 @@ function showPosition(position) {
 		localStorage.setItem('lat', lat );
 		localStorage.setItem('lng', lng );
 		
-		setTimeout(function(){ document.location = 'register.html'; }, 1000);
+		if( empty(localStorage.getItem('userId'))){
+			setTimeout(function(){ document.location = 'register.html'; }, 1000);
+		}else{
+			setTimeout(function(){ document.location = 'map.html'; }, 1000);	
+		}
 	/*
 	var formData = 'lat='+localStorage.getItem("lat")+'&lng='+localStorage.getItem("lng")+'&user_id='+localStorage.getItem("userId")+'&app_token='+localStorage.getItem("userToken");
 	$.ajax({
