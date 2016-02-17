@@ -131,10 +131,11 @@ $(document).ready(function(e) {
 
 	myloc = new google.maps.Marker({
 		clickable: false,
-		icon: new google.maps.MarkerImage('//maps.gstatic.com/mapfiles/mobile/mobileimgs2.png', new google.maps.Size(22,22), new google.maps.Point(0,18), new google.maps.Point(11,11)),
+		icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/mobile/mobileimgs2.png', new google.maps.Size(22,22), new google.maps.Point(0,18), new google.maps.Point(11,11)),
 		shadow: null,
 		zIndex: 999,
-		map: map
+		map: map,
+		title : 'me'
 	});
   
 
@@ -169,7 +170,11 @@ function loadMarkers(){
 				position: new google.maps.LatLng( chef.lat, chef.lng),
 				map: map,
 			});
-			marker.setIcon('http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+chef.company.charAt(0)+'|E44744|000000');
+			mColor = '|E44744|000000'; // red
+			if( chef.mcolor == 'blue')  mColor = '|437CE5|000000'; // blue
+			if( chef.mcolor == 'green')  mColor = '|5CB85C|000000'; // green
+			
+			marker.setIcon('http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+chef.company.charAt(0)+mColor );
 			markersArray.push(marker);
 			google.maps.event.addListener(marker, 'click', (function(marker, i) {
 				return function() {
