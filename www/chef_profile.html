@@ -229,7 +229,6 @@ $(document).ready(function(e) {
 	var chef_data;
 	
 	
-	
 	if( chef_id > 0 ){
 		
 		var jsonData = JSON.parse(localStorage.getItem('nearbyChefs'));
@@ -598,6 +597,7 @@ var ppApp = {
 	},
 	onUserCanceled: function(result) {
 		//console.log(result);
+		document.location.href = 'chef_profile.html?id=' + chef_id;
 	}
 };
 

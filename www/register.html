@@ -46,8 +46,8 @@
 		</div>
 		<button class="btn btn-positive btn-block">Login</button>
 	</form>
-	<form id="frmRegister" method="post" class="class="form-horizontal"">
-		<h4 class="form-heading text-center">Create account</h4>
+	<form id="frmRegister" method="post"  class="user-form login-form">
+		<h4 class="form-heading text-center">Create and Register</h4>
 		
 		
 		
@@ -60,12 +60,24 @@
 		<div class="form-group">
 			<div class="input-group">
 				<div class="input-group-addon for-user"><i class="fa fa-lock"></i></div>
-				<input type="password" placeholder="Choose Password" autocomplete="off" name="n[password]" class="form-control required" />
+				<input type="password" placeholder="Choose Password" autocomplete="off" name="n[password]" id="regPwd" class="form-control required" />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="input-group">
+				<div class="input-group-addon for-user"><i class="fa fa-lock"></i></div>
+				<input type="password" placeholder="Retype Password" autocomplete="off" name="repassword" id="regRePwd" class="form-control required" />
 			</div>
 		</div>
 		
+		
+		
 		<button type="submit" class="btn btn-positive btn-block">Sign up</button>
 	</form>
+	
+	
+	
+	
 	
 	<div id="social-icon" class="text-center" style="display:none">
 		<h4>Or Sign up with</h4>
@@ -122,9 +134,9 @@ $(document).ready(function(e) {
 	$("#frmRegister").validate({
 		errorPlacement: function(error, element) {},
 		submitHandler: function(form) {
-			if( $('#S_Password').val() != $('#S_rePassword').val() ){
+			if( $('#regPwd').val() != $('#regRePwd').val() ){
 				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-				BAlert.find('.modal-body').html('<p class="text-danger">Password fields must match and password must be at least 6 characters long. </p>');
+				BAlert.find('.modal-body').html('<p class="text-danger">Password and retype password fields must match!</p>');
 				BAlert.modal();	
 			}else{
 				formData = $(form).serialize();
