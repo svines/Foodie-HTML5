@@ -44,6 +44,24 @@ Copyright (c) 2016  Foodie Systems, Inc.
 
 var Timeouts = 0;
 
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+	useragent = navigator.userAgent;
+	if ( useragent.indexOf('iPhone') !== -1 || useragent.indexOf('Android') !== -1 ) {
+		navigator.geolocation.watchPosition( 
+			showPosition, 
+			onShortError, 
+			{ enableHighAccuracy: true, maximumAge: 3000, timeout: 5000 }
+		);			
+		// or let other geolocation capable browsers to get their static position
+	} else if ( navigator.geolocation ) {
+		navigator.geolocation.getCurrentPosition( showPosition, onShortError );
+	}
+}
+
+
+
 function onShortError(error){
 	try{
 		BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> GPS Error ' );
@@ -63,11 +81,7 @@ function onShortError(error){
 	}
 }
 
-function geoLocationError(error){
-	BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error ('+error.code+')' );
-	BAlert.find('.modal-body').html('<p class="text-danger">Could not get the current position. Either GPS signals are weak or GPS has been switched off</p>');
-	BAlert.modal();	
-}
+
 
 function showPosition(position) {
 	try{
@@ -128,12 +142,14 @@ if(localStorage.getItem("userId")=== null){
 }
 /**/
 
+/*
 if (!navigator.geolocation){
 	alert('Geolocation not  available');
 }else{
 	//var watchId = navigator.geolocation.watchPosition(showPosition, onShortError, { maximumAge: 300000, timeout: 5000, enableHighAccuracy:true });
 	navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });
 }
+*/
 
 </script>
 </body>

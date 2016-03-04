@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.foodiesys.foodiemobileapp" versionCode = "5" version="1.1.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0" >
+<widget id="com.foodiesys.foodiemobileapp" versionCode = "6" version="1.1.2" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0" >
 
     <name>Foodie Foodie</name>
     <description>Authentic and Specialized Cuisine by Local Chefs</description>
@@ -14,19 +14,18 @@
 	<allow-navigation href="http://mobileapi.foodiesys.com/*" />
 	<allow-navigation href="data:*" />
 	
-	<plugin name="cordova-plugin-geolocation" spec="1.0.1" source="pgb" />
+	<gap:plugin name="cordova-plugin-geolocation"  source="npm" />
 	<gap:plugin name="com.paypal.cordova.mobilesdk" source="npm" />
 	<plugin name="cordova-plugin-whitelist" spec="1"/>
-	
 	<plugin name="cordova-plugin-camera" spec="1.2.0" source="pgb" />
 	<plugin name="cordova-plugin-media-capture" spec="1.0.1" source="pgb" />
 	<plugin name="cordova-plugin-file" spec="3.0.0" source="pgb" />
 	<plugin name="cordova-plugin-file-transfer" spec="1.3.0" source="pgb" />
 	<plugin name="cordova-plugin-console" spec="1.0.1" source="pgb" />
-	<plugin name="cordova-plugin-barcode-scanner2" source="npm" />
-	
-	<!--<plugin name="org.madmobile.cordovaplugins.zbarscanner" source="npm" />-->
+	<plugin name="org.madmobile.cordovaplugins.zbarscanner" source="npm" />-->
 	<gap:plugin name="phonegap-plugin-barcodescanner" source="npm" />
+	<gap:plugin name="phonegap-plugin-push" source="npm" />
+
 	
 	<icon src="icon.png"/>
 	

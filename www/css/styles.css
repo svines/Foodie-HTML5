@@ -698,3 +698,6 @@ input.error{ color:#B00; background-color:#FDD }
 li.menu-heading:first-child {
     padding-top: 20px;
 }
+
+button.close span{ font-size:34px; }
+.modal-dialog{ margin-top:30px; }
