@@ -130,7 +130,7 @@ function loadNotifications(){
 				}
 				//$DTemp.remove();
 			}else{
-				$('#notification-container').html('<center>No Notifications Found</center>');
+				$('#notification-container').html('<center>'+cLan.NoNotifications+'</center>');
 			}
 		}else { 
 			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
