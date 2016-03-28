@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
@@ -82,20 +82,35 @@ html, body {
 
 </style>
 </head>
-<body onload="onLoad()" id="wrapper">
+<body id="wrapper">
+
+
+
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
-			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
-			<li><a class="sub" href="map.html">Chefs</a></li>
-			<li><a class="sub" href="user-profile.html">My Profile</a></li>
-			<li><a class="sub" href="reservations.html">My Orders</a></li>
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>			
 		</ul>
 	</nav>
 </div>
 <div class="content" style="height:100%; padding-bottom:90px;">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
-		<p class="pageTitle">Search Chefs</p>
+		<p class="pageTitle" data-bind="text: lang.SearchChefs"></p>
 	</h1>
 	<div id="map" style="height:100% ;"></div>
 </div>
@@ -103,9 +118,10 @@ html, body {
 	<div class="container">
 		<div class="row">
 			<span id="footerLinksNormal">
-			<div class="col-xs-4 no-padding"> <a class="tab-item active" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-4 no-padding"> <a class="tab-item" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item active" href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> <i class="fa fa-map-o tab"></i> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item" id="anoti" href="notifications.html"> <img class="tab-icon" src="images/notification-icon.png" alt="map-icon"> </a>	</div>
 			</span>
 			<span id="footerLinksNoLogin">
 			<div class="col-xs-6 no-padding"> <a class="tab-item" href="register.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
@@ -117,17 +133,21 @@ html, body {
 <script src="cordova.js"></script>
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
-<script src="http://maps.google.com/maps/api/js"></script>
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyBrGQ3WXjDyt6lu6OLS4RDNBXYb3Wr-l_Y"></script>
+<script src='js/knockout-3.4.0.js'></script>
 <script src="js/common.js"></script> 
 <script>
 
 var myloc = null;
-
-function onLoad(){ 
-	document.addEventListener("deviceready", onDeviceReady, false);
-}
+var map;
+var marker, i, chef;
+var jsonData;
+var markersArray = [];
+var myLatLng;
+var infowindow;
 
 function onDeviceReady() {
+	initMap();
 	useragent = navigator.userAgent;
 	if ( useragent.indexOf('iPhone') !== -1 || useragent.indexOf('Android') !== -1 ) {
 		navigator.geolocation.watchPosition( 
@@ -141,7 +161,45 @@ function onDeviceReady() {
 	}
 }
 
+function initMap(){
+	console.log('initMap');
+	myLatLng =  new google.maps.LatLng( localStorage.getItem('lat') , localStorage.getItem('lng') );
+	var mapOptions = {
+		center: myLatLng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoom:9,
+		scrollwheel: false,
+	};
+					 
+	map = new google.maps.Map(document.getElementById('map'), mapOptions);
+   infowindow = new google.maps.InfoWindow({maxWidth: 400});
 
+	var centerControlDiv = document.createElement('div');
+	var centerControl = new CenterControl(centerControlDiv, map);
+	
+	centerControlDiv.index = 1;
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(centerControlDiv);
+
+	var imageA = new google.maps.MarkerImage(
+							'images/bluedot_retina.png',
+							null, // size
+							null, // origin
+							new google.maps.Point( 8, 8 ), // anchor (move to center of marker)
+							new google.maps.Size( 17, 17 ) // scaled size (required for Retina display icon)
+						);
+	
+	myloc = new google.maps.Marker({
+		flat: true,
+		icon: imageA,
+		map: map,
+		optimized: false,
+		position: myLatLng,
+		title: 'I might be here',
+		visible: true
+	});
+	loadMarkers();
+
+} // end initMap
 
 function onShortError(error){
 	console.log(error);
@@ -154,6 +212,21 @@ function showPosition(pos){
 		
 	}
 }
+
+$(document).ready(function() {
+    window.isphone = false;
+    if(document.URL.indexOf("http://") === -1 && document.URL.indexOf("https://") === -1) {
+        window.isphone = true;
+    }
+
+    if( window.isphone ) {
+        document.addEventListener("deviceready", onDeviceReady, false);
+    } else {
+        onDeviceReady();
+    }
+});
+
+
 
 $(document).ready(function(e) {
 	
@@ -183,9 +256,26 @@ $(document).ready(function(e) {
 			localStorage.setItem('nearbyChefsCount', data.nearbyChefsCount );
 			localStorage.setItem('chefStatus', data.chefStatus );
 			localStorage.setItem('chefData', data.chefData );
+			localStorage.setItem('Notifications',data.Notifications );
+			
+			if(!empty(data.AvLang)){	localStorage.setItem('AvLang',data.AvLang ); }
+			
+			if(!empty(data.LanVersion) && data.LanVersion > cLan.Version ){
+				
+				$.get( ServerAjax+"?h=getLangJson&LG="+cLan.LangCode, function( data ) {
+					try{
+						var jt = JSON.parse(data);
+						if(!empty(jt)){
+							localStorage.setItem('LanguageData', data );		
+						}
+					}catch(e){}
+				});
+			}
+			
+			showNotifications();
 			loadMarkers();
 		}else{ 
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
 			BAlert.modal();
 		}
@@ -196,44 +286,40 @@ $(document).ready(function(e) {
 });
 
 
-  /**/
-  
-  var myLatLng =  new google.maps.LatLng( localStorage.getItem('lat') , localStorage.getItem('lng') );
-  
-	var mapOptions = {
-		center: myLatLng,
-		mapTypeId: google.maps.MapTypeId.ROADMAP,
-		zoom:9,
-		scrollwheel: false,
-	};
-					 
-	var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-   var infowindow = new google.maps.InfoWindow({maxWidth: 400});
 
-	var imageA = new google.maps.MarkerImage(
-							'images/bluedot_retina.png',
-							null, // size
-							null, // origin
-							new google.maps.Point( 8, 8 ), // anchor (move to center of marker)
-							new google.maps.Size( 17, 17 ) // scaled size (required for Retina display icon)
-						);
 
-	myloc = new google.maps.Marker({
-		flat: true,
-		icon: imageA,
-		map: map,
-		optimized: false,
-		position: myLatLng,
-		title: 'I might be here',
-		visible: true
-	});
-  
-
-   var marker, i, chef;
-	var jsonData;
-	var markersArray = [];
+function CenterControl(controlDiv, map) {
+	// Set CSS for the control border.
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = '#fff';
+	controlUI.style.border = '2px solid #fff';
+	controlUI.style.borderRadius = '3px';
+	controlUI.style.boxShadow = '0 2px 4px rgba(0,0,0,.3)';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.marginBottom = '12px';
+	controlUI.style.marginTop = '12px';
+	controlUI.style.marginRight = '10px';
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Click to recenter the map';
+	controlDiv.appendChild(controlUI);
 	
-	loadMarkers();
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.style.color = 'rgb(25,25,25)';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	controlText.style.fontSize = '12px';
+	controlText.style.lineHeight = '30px';
+	controlText.style.paddingLeft = '5px';
+	controlText.style.paddingRight = '5px';
+	controlText.innerHTML = 'Center Map';
+	controlUI.appendChild(controlText);
+
+	// Setup the click event listeners: simply set the map to Chicago.
+	controlUI.addEventListener('click', function() {
+		map.panTo(myloc.getPosition());
+	});
+}
+
 
 function loadMarkers(){
 	
@@ -265,15 +351,15 @@ function loadMarkers(){
 						r2 = r.toFixed(1); 
 						r = (Math.round(r * 2) / 2).toFixed(1);
 					}
-					ri = '<img src="images/'+r+'.gif" alt="" /> ('+ r2 + '/5)<br>In '+jsonData[i].rating_count+' Reviews' ;
+					ri = '<img src="images/'+r+'.gif" alt="" /> ('+ r2 + '/5)<br>'+cLan['in']+' '+jsonData[i].rating_count+' '+cLan.Reviews ;
 					var c = '';
 					if(!empty(jsonData[i].image1)){
 						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'"><img src="http://mobileapi.foodiesys.com/foodie-mssql/pics/'+jsonData[i].image1+'" class="img-rounded" style="width:100%;"  /></a></div>';
 					}else{
 						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'"><img src="images/no-pic3.jpg" class="img-rounded" style="width:100%;"  /></a></div>';
 					}	
-						c = c +	'<div class="col-xs-7 no-padding"><strong><a href="chef_profile.html?id='+jsonData[i].id+'">'+jsonData[i].company+'</a></strong><br />People Served: '+jsonData[i].people_served+'<br>Food Cost: '+jsonData[i].food_cost+'<br />';
-						c = c +	ri+'</div><div class="clearfix"></div><strong>Address:</strong> '+jsonData[i].address+', '+jsonData[i].city+' '+jsonData[i].state+' '+jsonData[i].zip;
+						c = c +	'<div class="col-xs-7 no-padding"><strong><a href="chef_profile.html?id='+jsonData[i].id+'">'+jsonData[i].company+'</a></strong><br />'+cLan.PeopleServed+': '+jsonData[i].people_served+'<br>'+cLan.FoodCost+': '+jsonData[i].food_cost+'<br />';
+						c = c +	ri+'</div><div class="clearfix"></div><strong>'+cLan.Address+':</strong> '+jsonData[i].address+', '+jsonData[i].city+' '+jsonData[i].state+' '+jsonData[i].zip;
 						//c = c +  '<a href="#" rel="'+jsonData[i].id+'" class="btn btn-xs btn-primary pull-right aResv">Reservation</a>';
 					infowindow.setContent(c);
 					infowindow.open(map, marker);
@@ -286,8 +372,23 @@ function loadMarkers(){
 
 
 
-
-
+/*
+useragent = navigator.userAgent;
+if ( useragent.indexOf('iPhone') !== -1 || useragent.indexOf('Android') !== -1 ) {
+	navigator.geolocation.watchPosition( 
+		showPosition, 
+		onShortError, 
+		{ 
+			enableHighAccuracy: true, 
+			maximumAge: 30000, 
+			timeout: 27000 
+		}
+	);			
+	// or let other geolocation capable browsers to get their static position
+} else if ( navigator.geolocation ) {
+	navigator.geolocation.getCurrentPosition( showPosition, onShortError );
+}
+*/
 
 
 	 

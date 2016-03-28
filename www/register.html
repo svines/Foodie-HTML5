@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
@@ -26,12 +26,12 @@
 <div id="lgn-sign-page" class="content">
 	<div id="lgn-signUp-buton">
 		<div class="col-xs-12">
-			<div class="col-xs-6 no-padding"> <a href="#" class="btn btn-default btn-block btn-user btn-sign-in">Login</a> </div>
-			<div class="col-xs-6 no-padding"> <a href="#" class="btn btn-default btn-block btn-user btn-register btn-active">Register</a> </div>
+			<div class="col-xs-6 no-padding"> <a href="#" class="btn btn-default btn-block btn-user btn-sign-in" data-bind="text: lang.Login">Login</a> </div>
+			<div class="col-xs-6 no-padding"> <a href="#" class="btn btn-default btn-block btn-user btn-register btn-active" data-bind="text: lang.Register">Register</a> </div>
 		</div>
 	</div>
 	<form id="frmLogin" class="user-form login-form" method="post" style="display:none">
-		<h4 class="form-heading text-center">Login to your account</h4>
+		<h4 class="form-heading text-center" data-bind="text: lang.Logintoyouraccount">Login to your account</h4>
 		<div class="form-group">
 			<div class="input-group">
 				<div class="input-group-addon for-user"><i class="fa fa-at"></i></div>
@@ -44,10 +44,10 @@
 				<input type="password" name="password" placeholder="Password" class="form-control required">
 			</div>
 		</div>
-		<button class="btn btn-positive btn-block">Login</button>
+		<button class="btn btn-positive btn-block" data-bind="text: lang.Login">Login</button>
 	</form>
 	<form id="frmRegister" method="post"  class="user-form login-form">
-		<h4 class="form-heading text-center">Create and Register</h4>
+		<h4 class="form-heading text-center" data-bind="text: lang.CreateandRegister">Create and Register</h4>
 		
 		
 		
@@ -72,7 +72,7 @@
 		
 		
 		
-		<button type="submit" class="btn btn-positive btn-block">Sign up</button>
+		<button type="submit" class="btn btn-positive btn-block" data-bind="text: lang.Signup">Sign up</button>
 	</form>
 	
 	
@@ -100,8 +100,7 @@
 <script src="js/jquery-1.11.3.min.js"></script>
 <script src="js/jquery.validate.min.js"></script> 
 <script src="js/bootstrap.min.js"></script>
-<!-- Include the compiled Ratchet JS --> 
-<!--<script src="js/ratchet.js"></script>--> 
+<script src='js/knockout-3.4.0.js'></script>
 <script src="js/common.js"></script> 
 <script>
 
@@ -135,14 +134,14 @@ $(document).ready(function(e) {
 		errorPlacement: function(error, element) {},
 		submitHandler: function(form) {
 			if( $('#regPwd').val() != $('#regRePwd').val() ){
-				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 				BAlert.find('.modal-body').html('<p class="text-danger">Password and retype password fields must match!</p>');
 				BAlert.modal();	
 			}else{
 				formData = $(form).serialize();
 				$.ajax({
 					type: "POST", dataType: 'json', url: ServerAjax+"?h=register", data: formData,
-					beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+					beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 					complete: function() { waitingDialog.hide(); },
 				}).fail(  ajaxError )
 				.done(function(data){
@@ -159,9 +158,7 @@ $(document).ready(function(e) {
 						}
 							
 					} else { 
-						BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-						BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-						BAlert.modal();
+						ErrorModalWithParm(data);
 					}
 					if (data.JS) { eval(data.JS); }
 			
@@ -176,7 +173,7 @@ $(document).ready(function(e) {
 			formData = $(form).serialize();
 			$.ajax({
 				type: "POST", dataType: 'json', url: ServerAjax+"?h=login", data: formData,
-				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
 			.done(function(data){
@@ -194,9 +191,7 @@ $(document).ready(function(e) {
 					}
 					
 				} else { 
-					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-					BAlert.modal();
+					ErrorModalWithParm(data);
 				}
 				if (data.JS) { eval(data.JS); }
 			

@@ -38,13 +38,28 @@
 		</ul>
 	</nav>
 </div>
-<div id="user-profile-page" class="content">
+
+
+<div id="notification-page" class="content">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a> </h1>
-	<p class="pageTitle" data-bind="text: lang.AboutFudi"></p>
-	<div class="container">
-	<h4>Version — 1.0</h4>
-	<br />
-	Copyright &copy; 2016 Fudi Systems, Inc.
+	<p class="pageTitle" data-bind="text: lang.Notifications"></p>
+	
+	<div class="text-center hidden">
+		<button id="btnClear" class="btn btn-primary"><i class="fa fa-eraser"></i> Clear All</button>
+	</div>
+
+	
+	<div id="notification-container">
+		<div class="media hidden">
+			<div class="media-left">
+				<i class="fa fa-bell-o"></i>
+			</div>
+			<div class="media-body">
+				<h3>Notifi</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur amet adipisicing elit. Vero voluptates pariatur tempora.</p>
+			</div>
+		</div>
+		<div class="aLoading text-center" style="display:none"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
 	</div>
 </div>
 <br />
@@ -60,17 +75,74 @@
 				<!-- <i class="fa fa-map-o tab"></i> --> 
 				<img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
 			<div class="col-xs-3 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-3 no-padding"> <a class="tab-item " href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"><img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-3 no-padding"> <a class="tab-item " id="anoti" href="notifications.html"> <img class="tab-icon" src="images/notification-icon.png" alt="map-icon"> </a>	</div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"><img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item active" id="anoti" href="notifications.html"> <img class="tab-icon" src="images/notification-icon.png" alt="map-icon"> </a>	</div>
 		</div>
 	</div>
 </div>
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script> 
-<script src="js/bootstrap.min.js"></script> 
-<script src='js/knockout-3.4.0.js'></script>
-<script src="js/common.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src='js/knockout-3.4.0.js'></script> 
+<script src="js/common.js"></script> 
+<script>
+
+var RetPage = null;
+
+$(document).ready(function(e) {
+	
+	RetPage = getUrlParameter('ret');
+	
+	if( localStorage.getItem('userData') === null ){
+	
+	}else{
+		loadNotifications();
+	}
+	
+	
+	
+	
+	$('#btnClear').on('click',function(){
+		
+	});
+	
+	
+});
+
+function loadNotifications(){
+	formData = 'user_id='+ localStorage.getItem('userId');
+	formData += '&userToken='+ localStorage.getItem('userToken');
+	$.ajax({
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getNotifications", data: formData,
+		beforeSend: function() { $('div.aLoading').show();  },
+		complete: function() { $('div.aLoading').hide(); },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			if(data.Count > 0 ){
+				resData = data.Notifications;
+				$DTemp = $('div.media');
+				for (var i = 0; i < resData.length; i++) {
+					$copy = $DTemp.clone().removeClass('hidden');
+					$copy.find('div.media-body h3').html( resData[i].title);
+					$copy.find('div.media-body p').html( resData[i].text);
+					$copy.appendTo('#notification-container');
+				}
+				//$DTemp.remove();
+			}else{
+				$('#notification-container').html('<center>No Notifications Found</center>');
+			}
+		}else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+	
+	}); // ajax	
+}
 
 
+</script>
 </body>
 </html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Fudi</title>
+
+<!-- Sets initial viewport load and disables zooming  -->
+<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+<!-- Makes your prototype chrome-less once bookmarked to your phone's home screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="mobile-web-app-capable" content="yes">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/font-awesome.min.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+</head>
+<body id="wrapper">
+<div id="sidebar-wrapper">
+	<nav id="nav">
+		<ul class="sidebar-nav nav" id="navRight">
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
+		</ul>
+	</nav>
+</div>
+<div id="settings-page" class="content">
+	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a> </h1>
+	<p class="pageTitle" data-bind="text: lang.Settings">Settings</p>
+	<div> 
+	
+	</div>
+	<div id="setting-form">
+		
+		<div class="container">
+			<div class="row">
+				<form class="form-horizontal" id="user-form">
+					<div class="form-group">
+						<label for="property-one" class="control-label col-xs-6 no-right-padding"> <span data-bind="text: lang.Language">Language</span> </label>
+						<div class="col-xs-6 text-right">
+						<select name="slanguage" id="slanguage">
+							
+						</select>
+						</div>
+					</div>
+					<button type="button" class="btn btn-positive btn-submit btn-block" data-bind="text: lang.SaveSettings"></button>
+					
+					<!--<div class="form-group">
+						<label for="property-one" class="control-label col-xs-9 no-right-padding"> Property Two <small class="text-muted setting-info"> This is the little description of property. </small> </label>
+						<div class="col-xs-3 text-right">
+							<div>
+								<input type="checkbox" name="property-two">
+								<div class="Switch Round Off">
+									<div class="Toggle"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="form-group">
+						<label for="property-three" class="control-label col-xs-9 no-right-padding"> Property Six <small class="text-muted setting-info"> This is the little description of property you want to change now. </small> </label>
+						<div class="col-xs-3 text-right">
+							<div>
+								<input type="checkbox" name="property-one">
+								<div class="Switch Round Off">
+									<div class="Toggle"></div>
+								</div>
+							</div>
+						</div>
+					</div>-->
+					
+					
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<div id="bottom-bar">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-3 no-padding"> <a class="tab-item " href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> 
+				<!-- <i class="fa fa-map-o tab"></i> --> 
+				<img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item " href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"><img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item " id="anoti" href="notifications.html"> <img class="tab-icon" src="images/notification-icon.png" alt="map-icon"> </a>	</div>
+		</div>
+	</div>
+</div>
+<script src="js/jquery-1.11.3.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script> 
+<script src="js/bootstrap.min.js"></script>
+<script src='js/knockout-3.4.0.js'></script> 
+<script src="js/common.js"></script> 
+<script>
+
+var RetPage = null;
+
+$(document).ready(function(e) {
+	
+	var AvLang = {'EN':'English'};
+	
+	if( !empty(localStorage.getItem('AvLang'))){
+		AvLang = JSON.parse(localStorage.getItem('AvLang'));	
+	}
+	
+	
+	document.getElementById("slanguage").options.length = 0;
+	for (var key in AvLang) {
+		var opt = '<option value="'+key+'">'+AvLang[key]+'</option>';
+		if( key == cLan.LangCode ){
+			opt = '<option SELECTED="SELECTED" value="'+key+'">'+AvLang[key]+'</option>';
+		}
+		console.log(opt);
+		$('#slanguage').append( $(opt) );
+	}
+	
+	
+	
+	$('button.btn-submit').on('click',function(){
+		
+			console.log($('#slanguage').val());
+		
+			var formData = $('#user-form').serialize();
+			$.ajax({
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=saveSettings", data: formData, 
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail( ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					
+					if( cLan.LangCode != $('#slanguage').val()){
+							
+						loadLanguage( $('#slanguage').val() );
+					
+					}
+					
+					
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				if (data.JS) { eval(data.JS); }
+			}); // ajax	
+		//}
+	});
+	
+});
+
+function loadLanguage(LG){
+	
+	$.ajax({
+		type: "POST", url: ServerAjax+"?h=getLangJson&LG="+LG, 
+		beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+		complete: function() { waitingDialog.hide(); },
+	}).fail( ajaxError )
+	.done(function(data){
+			
+		localStorage.setItem('LanguageData',data );
+		document.location.href = 'settings.html';	
+
+	}); // ajax	
+	
+}
+
+</script>
+</body>
+</html>

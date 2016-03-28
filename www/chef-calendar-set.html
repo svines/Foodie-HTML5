@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -32,24 +32,39 @@
 </style>
 </head>
 <body id="wrapper">
+
+
+
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
-			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
-			<li><a class="sub" href="map.html">Chefs</a></li>
-			<li><a class="sub" href="user-profile.html">My Profile</a></li>
-			<li><a class="sub" href="reservations.html">My Orders</a></li>
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
 		</ul>
 	</nav>
 </div>
 <div id="user-profile-page" class="content">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
-	<p class="pageTitle" style="font-size:24px">Schedule of Availability</p>
+	<p class="pageTitle" style="font-size:24px" data-bind="text: lang.SoA"></p>
 	</h1>
-	<div id="topAlert" style="display:none" class="alert alert-warning"><i class="fa fa-warning"></i> Please fill your chef profile below to register as a chef; however your profile will be active once approved by our staff.</div>
+	<div id="topAlert" style="display:none" class="alert alert-warning"><i class="fa fa-warning"></i> <span data-bind="text: lang.FSP"></span></div>
 	
 	<form id="user-form">
-		<p>Click dates below to set timings and availability of dishes</p>
+		<p data-bind="text: lang.Clickdates"></p>
 		<div class="aLoading text-center"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
 		<div id="sp_loaded" style="display:none">
 			<div style="overflow:hidden;">
@@ -61,7 +76,7 @@
 					</div>
 				</div>
 			</div>
-			<button type="button" id="btn-submit" class="btn btn-positive btn-block btn-submit">Save</button>
+			<button type="button" id="btn-submit" class="btn btn-positive btn-block btn-submit" data-bind="text: lang.Save"></button>
 		</div>
 	</form>
 </div>
@@ -81,10 +96,10 @@
 			<div class="modal-body">
 				<form method="post" id="frmReserve">
 					<div class="form-group">
-						<label class="">Start Time</label>
+						<label data-bind="text: lang.StartTime"></label>
 						<div class="">
 							<select name="start_time" id="start_time" class="form-control required">
-								<option value="">Start Time</option>
+								<option value="" data-bind="text: lang.StartTime"></option>
 								<option value="00:00:00">12:00 AM</option>
 								<option value="01:00:00">01:00 AM</option>
 								<option value="02:00:00">02:00 AM</option>
@@ -114,10 +129,10 @@
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="">End Time</label>
+						<label data-bind="text: lang.EndTime"></label>
 						<div class="">
 							<select name="end_time" id="end_time" class="form-control required">
-								<option value="">End Time</option>
+								<option value="" data-bind="text: lang.EndTime"></option>
 								<option value="01:00:00">01:00 AM</option>
 								<option value="02:00:00">02:00 AM</option>
 								<option value="03:00:00">03:00 AM</option>
@@ -147,18 +162,18 @@
 					</div>
 					
 					<div class="form-group">
-						<input type="checkbox" id="check_all_days" /> <label id="lbl_all_days"> Apply to all Sundays</label>
+						<input type="checkbox" id="check_all_days" /> <label id="lbl_all_days">Apply to all Sundays</label>
 					</div>	
 					
 					
-					<strong>Dishes </strong> <a id="aSelAll" class="btn btn-link btn-sm" href="#">Select All</a><br />
+					<strong data-bind="text: lang.Dishes"></strong> &nbsp; <a id="aSelAll" class="btn btn-link btn-sm" href="#" data-bind="text: lang.SelectAll" ></a><br />
 					<div class="form-group" id="sp_dishes"></div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<button id="btnUnav" type="button" class="btn btn-danger">Mark Unavailable</button>
-				<button id="btnAdd" type="button" class="btn btn-success">OK</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-bind="text: lang.Cancel">Cancel</button>
+				<button id="btnUnav" type="button" class="btn btn-danger" data-bind="text: lang.MarkUnavailable">Mark Unavailable</button>
+				<button id="btnAdd" type="button" class="btn btn-success" data-bind="text: lang.OK">OK</button>
 			</div>
 		</div>
 	</div>
@@ -167,6 +182,7 @@
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
+<script src='js/knockout-3.4.0.js'></script> 
 <script src="js/common.js"></script> 
 <script src="js/moment.min.js"></script> 
 <script src="js/bootstrap-datetimepicker.min.js"></script> 
@@ -201,9 +217,9 @@ $(document).ready(function(e) {
 	$('#datetimepicker12').on('dp.change', function(m) {
 		thisDate = m.date.format("YYYY-MM-DD");
 		console.log( thisDate );
-		$('#lbl_all_days').html(' Apply to all future ' + m.date.format("dddd") + 's' );
+		$('#lbl_all_days').html(' '+cLan.ApplytoallfutureSundays+' ' + m.date.format("dddd") + 's' );
 		//console.log( DishAvO );
-		$('#popTitle').html('Set Availability for '+ m.date.format("ll") );
+		$('#popTitle').html(cLan.SetAvFor+' '+ m.date.format("ll") );
 		if(!empty(DishAvO[thisDate])){
 			$('#start_time').val( DishAvO[thisDate].start_time );
 			$('#end_time').val( DishAvO[thisDate].end_time );
@@ -280,8 +296,8 @@ $(document).ready(function(e) {
 		if($('#sp_dishes input:checked').length > 0){
 			$('#frmReserve').submit();
 		}else{
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-			BAlert.find('.modal-body').html('<p class="text-danger">Please select dish(es).</p>');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.PSelectD+'</p>');
 			BAlert.modal();
 		}
 	});
@@ -294,8 +310,8 @@ $(document).ready(function(e) {
 			en = parseInt( $('#end_time').val() );
 			if( en == 0 )en = 24;
 			if( st >= en ){
-				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-				BAlert.find('.modal-body').html('<p class="text-danger">Start and end times are not valid, start time must be before the end time</p>');
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+				BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.SEnV+'</p>');
 				BAlert.modal();
 				return false;
 			}
@@ -347,19 +363,19 @@ $(document).ready(function(e) {
 		//console.log(formData);
 		$.ajax({
 			type: "POST", dataType: 'json', url: ServerAjax+"?h=saveCal", data: formData,
-			beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+			beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 			complete: function() { waitingDialog.hide(); },
 		}).fail(  ajaxError )
 		.done(function(data){
 			if (data.Success == 'true') {
 				
-				BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
-				BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
+				BAlert.find('.modal-header h3').html('<i class="fa check"></i>'+cLan.Success);
+				BAlert.find('.modal-body').html('<p class="text-success">'+cLan['201']+'</p>');
 				BAlert.modal();
 				//document.location = 'chef-dishes.html';
 				//loadDishes(localStorage.getItem('userId'));
 			} else { 
-				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 				BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
 				BAlert.modal();
 			}
@@ -420,11 +436,11 @@ function loadDishes(){
 				
 				
 			}else{
-				$('#chef-sp_dishes').html('<center>No Dishes Found!</center>');
+				$('#chef-sp_dishes').html('<center>'+cLan.NoDishF+'</center>');
 			}
 			$('#sp_loaded').show();
 		}else { 
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
 			BAlert.modal();
 		}

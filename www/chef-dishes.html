@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -19,10 +19,22 @@
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
-			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
-			<li><a class="sub" href="map.html">Chefs</a></li>
-			<li><a class="sub" href="user-profile.html">My Profile</a></li>
-			<li><a class="sub" href="reservations.html">My Orders</a></li>
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
 		</ul>
 	</nav>
 </div>
@@ -31,17 +43,17 @@
 <div class="container">
 	<div id="chef-page" class="content">
 		<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
-		<p class="pageTitle">Manage  Dishes</p>
+		<p class="pageTitle" data-bind="text: lang.ManageD"></p>
 		</h1>
 		<h2>
-			<button class="btn btn-xs btn-primary pull-right btnShowAdd"><i class="fa fa-plus-circle"></i> Add New</button>
+			<button class="btn btn-xs btn-primary pull-right btnShowAdd"><i class="fa fa-plus-circle"></i> <span data-bind="text: lang.AddNew"></span></button>
 		</h2>
 		<div id="chef-foods">
 			<div class="food-listing hidden">
 				<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left" src="images/food-1.png" align="food img"></div>
 				<div class="food-info-cont">
-					<div class="food-info-body"> <a class="dishTitle" href="#">Strawbery muffin</a>
-						<button data-dish="0" class="btn btn-xs btn-warning btnEdit">Edit</button>
+					<div class="food-info-body"> <a class="dishTitle" href="#">..</a>
+						<button data-dish="0" class="btn btn-xs btn-warning btnEdit" data-bind="text: lang.Edit"></button>
 						<br />
 						<p class="dishInfo"></p>
 						<img src="images/0.gif" alt="" class="rating" /> <span class="rating_info"></span> </div>
@@ -62,34 +74,34 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="popAdd">Add/Edit Dish</h4>
+				<h4 class="modal-title" id="popAdd" data-bind="text: lang.AdEdDish"></h4>
 			</div>
 			<div class="modal-body">
 				<form method="post" id="frmReserve">
 					<div class="form-group">
 						<div id="image-upload" class="text-center" onClick="uploadImage()"> <img id="pimage" src="images/no-pic2.jpg" height="100" /> </div>
-						<div id="picture_msg" class="text-center help-block"> Tap on Image to change and upload </div>
+						<div id="picture_msg" class="text-center help-block" data-bind="text: lang.Toponpicup">  </div>
 					</div>
 					<div class="form-group">
-						<label  class="">Dish Name</label>
+						<label  data-bind="text: lang.DishName"></label>
 						<div class="">
-							<input type="text" name="dish_name" id="dish_nameA" class="form-control required" value="" placeholder="Dish Name">
+							<input type="text" name="dish_name" id="dish_nameA" class="form-control required" value="" >
 						</div>
 					</div>
 					<div class="form-group">
-						<label  class="">Price ($)</label>
+						<label  class=""><span data-bind="text: lang.Price"></span> ($)</label>
 						<div class="">
-							<input type="number" min="1" name="price" id="priceA" class="form-control required" value="" placeholder="Price">
+							<input type="number" min="1" name="price" id="priceA" class="form-control required" value="" >
 						</div>
 					</div>
 					
 					<div class="form-group">
-						<label  class="">Status</label>
+						<label data-bind="text: lang.Status"></label>
 						<div class="">
 							<input type="radio" name="status" value="1" />
-							Active &nbsp;
+							<span data-bind="text: lang.Active"></span> &nbsp;
 							<input type="radio" name="status" value="0" checked />
-							Inactive </div>
+							<span data-bind="text: lang.Inactive"></span> </div>
 					</div>
 					<input type="hidden" id="chef_id" name="chef_id">
 					<input type="hidden" id="dish_id" name="dish_id">
@@ -98,8 +110,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<button id="btnAdd" type="button" class="btn btn-primary">Save</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-bind="text: lang.Cancel"></button>
+				<button id="btnAdd" type="button" class="btn btn-primary" data-bind="text: lang.Save"></button>
 			</div>
 		</div>
 	</div>
@@ -107,10 +119,10 @@
 
 <!-- Script --> 
 <script type="text/javascript" src="cordova.js"></script> 
-<script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script> 
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
-<script src="js/jquery.validate.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script>
+<script src='js/knockout-3.4.0.js'></script> 
 <script src="js/common.js"></script> 
 <script>
 
@@ -172,21 +184,19 @@ $(document).ready(function(e) {
 			formData += '&userToken=' + localStorage.getItem('userToken');
 			$.ajax({
 				type: "POST", dataType: 'json', url: ServerAjax+"?h=addEditDish", data: formData,
-				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 				}).fail(  ajaxError
 				).done(function(data){
 					if (data.Success == 'true') {
 						$('#popAdd').modal('hide');
-						BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
-						BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
+						BAlert.find('.modal-header h3').html('<i class="fa check"></i>'+cLan.Success);
+						BAlert.find('.modal-body').html('<p class="text-success">'+cLan['202']+'</p>');
 						BAlert.modal();
 						document.location = 'chef-dishes.html';
 						//loadDishes(localStorage.getItem('userId'));
 					} else { 
-						BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-						BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-						BAlert.modal();
+						ErrorModalWithParm(data);
 					}
 					if (data.JS) { eval(data.JS); }
 				
@@ -215,17 +225,23 @@ function loadDishes(chef_id){
 				$DTemp = $('.food-listing');
 				for (var i = 0; i < dishData.length; i++) {
 					$copy = $DTemp.clone().removeClass('hidden');
-					$copy.find('img.img-responsive').prop('src', 'http://mobileapi.foodiesys.com/foodie-mssql/pics/'+dishData[i].image1);
+					
+					if(empty(dishData[i].image1)){
+						$copy.find('img.img-responsive').prop('src', 'images/no-pic3.jpg');		
+					}else{
+						$copy.find('img.img-responsive').prop('src', 'http://mobileapi.foodiesys.com/foodie-mssql/pics/'+dishData[i].image1);
+					}
+										
 					$copy.find('a.dishTitle').html(dishData[i].dish_name);
 					$copy.find('a.dishTitle').prop('rel', dishData[i].id );
 					$copy.find('.btnEdit').prop('data-dish', dishData[i].id );
-					var stat = (dishData[i].status ==0)?'Inactive':'Active';
-					$copy.find('p.dishInfo').html('Price : $'+dishData[i].price+' <br />/Status : <strong>'+stat+'</strong>');
+					var stat = (dishData[i].status ==0)?cLan.Inactive:cLan.Active;
+					$copy.find('p.dishInfo').html(cLan.Price+' : $'+dishData[i].price+' <br />'+cLan.Status+' : <strong>'+stat+'</strong>');
 					
 					obRat = ratingCal( dishData[i].rating_sum, dishData[i].rating_count );
 					
 					$copy.find('img.rating').prop('src', obRat['starImg']);
-					$copy.find('.rating_info').html( obRat['ratingTxt']+' &nbsp; '+dishData[i].rating_count+' Reviews' );
+					$copy.find('.rating_info').html( obRat['ratingTxt']+' &nbsp; '+dishData[i].rating_count+' '+cLan.Reviews );
 					
 					$copy.appendTo('#chef-foods');
 				}
@@ -234,7 +250,7 @@ function loadDishes(chef_id){
 				$('#chef-foods').html('<center>No Dishes Found</center>');
 			}
 		}else { 
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
 			BAlert.modal();
 		}
@@ -255,10 +271,10 @@ function uploadImage() {
 			var img = $('#pimage');
 			var imageURI = uri;
 			if (!imageURI) {
-				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				$('#picture_msg').html(cLan.ToponpicGal);
 				return;
 			}else{
-				$('#picture_msg').html("Uploading..");	
+				$('#picture_msg').html(cLan.Uploading);	
 			}
 			// Verify server has been entered
 			//server = 'http://mobileapi.foodiesys.com/foodie-mssql/upload.php';
@@ -273,7 +289,7 @@ function uploadImage() {
 			// Transfer picture to server
 			var ft = new FileTransfer();
 			ft.upload(imageURI, server, function(r) {
-				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				$('#picture_msg').html(cLan.ToponpicGal);
 				if (r.response.match("^Error")){
 					$('#picture_msg').html(r.response);
 				}else{
@@ -283,7 +299,7 @@ function uploadImage() {
 			},
 
 			function(error) {
-				$('#picture_msg').html("Upload failed: Code = " + error.code);
+				$('#picture_msg').html(cLan.Uploadfailed+" : Code = " + error.code);
 			}, options);
 
 		} catch (exce) {
@@ -293,7 +309,7 @@ function uploadImage() {
 
 	function(e) {
 		console.log("Error getting picture: " + e);
-		$('#picture_msg').html("No Image Found");
+		$('#picture_msg').html(cLan.NoPic);
 	}, {
 		quality: 60,
 		destinationType: navigator.camera.DestinationType.FILE_URI,

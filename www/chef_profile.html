@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -39,13 +39,28 @@
 </style>
 </head>
 <body id="wrapper">
+
+
+
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
-			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
-			<li><a class="sub" href="map.html">Chefs</a></li>
-			<li><a class="sub" href="user-profile.html">My Profile</a></li>
-			<li><a class="sub" href="reservations.html">My Orders</a></li>
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
 		</ul>
 	</nav>
 </div>
@@ -53,7 +68,7 @@
 <!-- Wrap all non-bar HTML in the .content div (this is actually what scrolls) -->
 <div id="chef-page" class="content">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
-	<p class="pageTitle">Chef Profile</p>
+	<p class="pageTitle" data-bind="text: lang.ChefProfile"></p>
 	 </h1>
 	<div id="chef-banner">
 		<div class="container">
@@ -71,30 +86,30 @@
 				<div class="col-xs-4 chef-info">
 					<div class="chef-info-box">
 						<h3 id="p_people_served">0</h3>
-						<p>People Served</p>
+						<p data-bind="text: lang.PeopleServed"></p>
 					</div>
 				</div>
 				<div class="col-xs-4 chef-info">
 					<div class="chef-info-box">
 						<h3 id="p_food_cost">0</h3>
-						<p>Food Cost</p>
+						<p data-bind="text: lang.FoodCost"></p>
 					</div>
 				</div>
 				<div class="col-xs-4 chef-info">
-					<div class="chef-info-box last-info-box">
-						<h3 id="p_rating_count">0</h3>
-						<p>Reviews</p>
+					<div id="spReview" class="chef-info-box last-info-box">
+						<h3 id="p_rating_count"><a href="#">0</a></h3>
+						<p><a href="#" data-bind="text: lang.Reviews"></a></p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<h2 class="text-center">Available Dishes <button id="btnStartOrder" class="btn btn-primary disabled">Order Now</button></h2>
+	<h2 class="text-center"><span data-bind="text: lang.AvailableDishes"></span> <button id="btnStartOrder" class="btn btn-primary disabled" data-bind="text: lang.OrderNow"></button></h2>
 	<div id="chef-foods">
 		<div class="food-listing hidden">
 			<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left" src="images/food-1.png" align="food img"> </div>
 			<div class="food-info-cont">
-				<div class="food-info-body"> <a class="dishTitle">Strawbery muffin</a><br />
+				<div class="food-info-body"> <a class="dishTitle">..</a><br />
 					<p class="dishInfo"></p>
 					<!--<img src="images/0.gif" alt="" class="rating" /> <span class="rating_info"></span>
 					<button data-dish="0" class="btn btn-xs btn-primary pull-right btnReserve">Reserve Now</button>-->
@@ -111,26 +126,50 @@
 <br />
 <br />
 <br />
+
+<div class="modal fade" id="popReviews" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" data-bind="text: lang.Reviews"></h4>
+			</div>
+			<div class="modal-body">
+				<strong>..</strong>
+				<img src="images/4.5.gif" id="p_rating" class="pull-right">
+				<p style="margin-top:10px;">..</p>
+				<hr>
+				
+				
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-bind="text: lang.OK"></button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <div class="modal fade" id="popReserve" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="popReserve">Add Reservation</h4>
+				<h4 class="modal-title" id="popReserve" data-bind="text: lang.AddReservation"></h4>
 			</div>
 			<div class="modal-body">
 				<form method="post" id="frmReserve">
 					
 					<div id="Step1">
 					<div class="form-group">
-						<label  class="">Number of Persons</label>
+						<label data-bind="text: lang.NumberofPersons"></label>
 						<div class="">
-							<input type="number" min="1" step="1" name="quantity" id="d_quantity" class="form-control required digits" value="1" placeholder="Quantity to Order">
+							<input type="number" min="1" step="1" name="quantity" id="d_quantity" class="form-control required digits" value="1">
 						</div>
 					</div>
 					<div class="form-group">
-						<label  class="">Pick a date from available dates(green) below</label>
+						<label data-bind="text: lang.Pickadate"></label>
 						<div style="overflow:hidden; border:2px solid #DDD; padding:5px 5px 0 5px" >
 							<div class="form-group">
 								<div class="row">
@@ -143,22 +182,22 @@
 						<input type="hidden" name="d_date" id="d_date" value="" />
 					</div>
 					<div class="form-group">
-						<label  class="">Time</label>
+						<label data-bind="text: lang.Time">Time</label>
 						<div class="">
 							<select name="d_time" id="d_time" class="form-control required">
-								<option value="">Select Time</option>
+								<option data-bind="text: lang.SelectTime" value=""></option>
 							</select>
 						</div>
 					</div>
 					</div>
 					
 					<div id="Step2">
-						<h4>Select Dishes</h4>
+						<h4  data-bind="text: lang.SelectDishes"></h4>
 						<div id="spAvDishes">
 							<ul class="list-group">
 							</ul>
 						</div>
-						<h2 id="d_total" style="color:#C00">Total : $0.00</h2>
+						<h2 id="d_total" style="color:#C00"><span data-bind="text: lang.Total">Total</span> : $0.00</h2>
 					</div>
 					
 					
@@ -171,9 +210,9 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-				<button id="btnNext" type="button" class="btn btn-primary">Next <i class="fa fa-arrow-circle-o-right"></i></button>
-				<button id="btnOrder" type="button" class="btn btn-primary">Order Now</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-bind="text: lang.Cancel"></button>
+				<button id="btnNext" type="button" class="btn btn-primary"><span data-bind="text: lang.Next">Next</span> <i class="fa fa-arrow-circle-o-right"></i></button>
+				<button id="btnOrder" type="button" class="btn btn-primary" data-bind="text: lang.OrderNow">Order Now</button>
 			</div>
 		</div>
 		
@@ -200,7 +239,8 @@
 <script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script> 
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
-<script src="js/jquery.validate.min.js"></script> 
+<script src="js/jquery.validate.min.js"></script>
+<script src='js/knockout-3.4.0.js'></script> 
 <script src="js/common.js"></script> 
 <script src="js/moment.min.js"></script> 
 <script src="js/bootstrap-datetimepicker.min.js"></script> 
@@ -247,7 +287,7 @@ $(document).ready(function(e) {
 		$('#p_company').html(chef_data.company);
 		$('#p_people_served').html(chef_data.people_served);
 		$('#p_food_cost').html(chef_data.food_cost);
-		$('#p_rating_count').html(chef_data.rating_count);
+		$('#p_rating_count a').html(chef_data.rating_count);
 		
 		
 		obRat = ratingCal( jsonData[i].rating_sum, jsonData[i].rating_count );
@@ -256,6 +296,43 @@ $(document).ready(function(e) {
 		
 	}
 	
+	$('#spReview a').on('click',function(){
+		
+		/*
+		var fbLoginSuccess = function (userData) {
+			console.log("UserInfo: ", userData);
+			facebookConnectPlugin.getLoginStatus(function onLoginStatus (status) {
+				console.log("current status: ", status);
+				facebookConnectPlugin.showDialog({
+					method: "share"
+					}, function onShareSuccess (result) {
+						console.log("Posted. ", result);
+				});
+			});
+		};
+		
+		
+		//facebookConnectPlugin.login( ['publish_actions'], fbLoginSuccess, fb_failure);
+		
+		var fShare = {
+			method: "share",
+			href: "http://www.playbuzz.com/samchung10/match-the-food-drink-with-their-nationality",
+			caption: "Match The Food/ Drink With Their Nationality",
+			description: "Basically what the title says. Give it a shot! I accept requests.",
+			picture: 'http://greatwesternfoods.net/images/slideshow/01.jpg'
+		};
+		try{
+			facebookConnectPlugin.showDialog( fShare, fb_success, fb_failure);
+		}catch(exception){
+			alert(exception);	
+		}
+		*/
+		
+		//facebook.request( "me/feed", "POST" { message="Hello Facebook" } );
+		
+		getReviews(chef_id);
+		$('#popReviews').modal();
+	});
 	
 	
 	$('#datetimepicker12').datetimepicker({
@@ -291,7 +368,7 @@ $(document).ready(function(e) {
 		
 		if( empty(localStorage.getItem('userId'))){
 			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-			BAlert.find('.modal-body').html('<p class="text-danger">In order to place an order, you need to login or register to to the app. Please tap <a href="register.html?ret='+chef_id+'">HERE</a> to login/register!</p>');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Pleaselogin+' <a href="register.html?ret='+chef_id+'">'+cLan.HERE+'</a> '+cLan.tologinregister+'</p>');
 			BAlert.modal();
 			return false;
 		}
@@ -304,8 +381,8 @@ $(document).ready(function(e) {
 			}
 		}
 		if( user_profile_complete == false ){
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-			BAlert.find('.modal-body').html('<p class="text-danger">In order to place an order, you need to complete your profile. Please tap <a href="user-profile.html?ret='+chef_id+'">HERE</a> to complete your profile!</p>');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Pleasetap+' <a href="user-profile.html?ret='+chef_id+'">'+cLan.HERE+'</a> '+cLan.tocompleteprofile+'</p>');
 			BAlert.modal();
 			return false;
 		}
@@ -324,8 +401,8 @@ $(document).ready(function(e) {
 			}
 		}
 		if(empty(enabledDates)){
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-			BAlert.find('.modal-body').html('<p class="text-danger">This chef is not available</p>');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Thischefnotavailable+'</p>');
 			BAlert.modal();
 			return false;
 			//$('#datetimepicker12').data("DateTimePicker").enabledDates([moment("06/15/2000")]);
@@ -343,14 +420,14 @@ $(document).ready(function(e) {
 	
 	$('#btnNext').on('click',function(){
 		if( empty(thisDate) || empty($('#d_time').val()) ){
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-			BAlert.find('.modal-body').html('<p class="text-danger">Please pick date and time!</p>');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Pleasepickdatetime+'</p>');
 			BAlert.modal();
 		}else{
 			formData = 'chef_id='+chef_id+'&quantity='+ $('#d_quantity').val()+'&d_date='+thisDate+'&d_time='+$('#d_time').val();
 			$.ajax({
 				type: "POST", dataType: 'json', url: ServerAjax+"?h=checkAvailable", data: formData,
-				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
 			.done(function(data){
@@ -364,16 +441,14 @@ $(document).ready(function(e) {
 						if( $.inArray( dishData[i].id, dateDishes )){
 							$('#spAvDishes ul').append('<li class="list-group-item">'+
 								'<input type="checkbox" data-price="'+dishData[i].price+'" data-name="'+dishData[i].dish_name+'" value="'+dishData[i].id+'"> '+dishData[i].dish_name+
-								'<div class="spDishD">Price : $'+dishData[i].price+ ' &nbsp; Qty : <input id="aQty'+dishData[i].id+'" type="number" value="1" class="input-sm inline" /></div></li>');
+								'<div class="spDishD">'+cLan.Price+' : $'+dishData[i].price+ ' &nbsp; '+cLan.Qty+' : <input id="aQty'+dishData[i].id+'" type="number" value="1" class="input-sm inline" /></div></li>');
 						} 
 					}
 					$('#Step1').hide(); $('#btnNext').hide();	
 					$('#Step2').show(500); $('#btnOrder').show(500);
 					
 				} else { 
-					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-					BAlert.modal();
+					ErrorModalWithParm(data);
 				}
 				//if (data.JS) { eval(data.JS); }
 			}); // ajax	
@@ -418,8 +493,8 @@ $(document).ready(function(e) {
 			});
 			
 			if( Total == 0 ){
-				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-				BAlert.find('.modal-body').html('<p class="text-danger">Please select at least one dish!</p>');
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+				BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.electdish+'</p>');
 				BAlert.modal();
 				return false;
 			}
@@ -433,7 +508,7 @@ $(document).ready(function(e) {
 			
 			$.ajax({
 				type: "POST", dataType: 'json', url: ServerAjax+"?h=Reserve2", data: formData,
-				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				beforeSend: function() { waitingDialog.show( cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
 			.done(function(data){
@@ -442,14 +517,12 @@ $(document).ready(function(e) {
 					if(empty(OrderId)){
 						OrderId = data.ResId ;
 						ppApp.Amount = Total;
-						ppApp.Description = 'Foodie Reservation '+data.ResId;
+						ppApp.Description = 'Fudi Reservation '+data.ResId;
 						ppApp.initialize();
 					}
 					/**///=========== /PayPal ==========
 				} else { 
-					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-					BAlert.modal();
+					ErrorModalWithParm(data);
 				}
 				if (data.JS) { eval(data.JS); }
 			
@@ -459,6 +532,14 @@ $(document).ready(function(e) {
 	});
 	
 });
+
+function fb_success(){
+	alert('success');	
+}
+function fb_failure(error){
+	alert(error);
+}
+
 function getTotal(){
 	var Total = 0.0;
 	$('#spAvDishes [type=checkbox]').each(function(index, element) {
@@ -467,6 +548,43 @@ function getTotal(){
 		}	
 	});
 	$('#d_total').html('Total : $'+Total.toFixed(2));
+}
+
+
+function getReviews(chef_id){
+	formData = 'chef_id='+chef_id;
+	//console.log(formData);
+	$.ajax({
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=getReviews", data: formData,
+		beforeSend: function() { $('#popReviews .modal-body').html('<div style="text-align:center"><img src="images/loading.gif" sytle=" margin: 25px auto;" /></div>')  },
+		complete: function() {  },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			if(data.Count > 0 ){
+				var html = '';
+				var Reviews = data.Reviews;
+				for (var i = 0; i < Reviews.length; i++) {
+					if( i > 0 ) html = html + '<hr />';
+					html = html + '<strong>'+ Reviews[i].first_name +' '+ Reviews[i].last_name +'</strong>';
+					html = html + '<img src="images/'+Reviews[i].rated+'.0.gif" id="p_rating" class="pull-right">';
+					if(!empty(Reviews[i].comments)){
+						html = html + '<p style="margin-top:10px;">'+Reviews[i].comments+'</p>';
+					}
+				}
+				$('#popReviews .modal-body').html(html);
+				
+			}else{
+				$('#popReviews .modal-body').html('<center>'+cLan.NoReviewsFound+'</center>');
+			}
+		}else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+		
+	}); // ajax	
 }
 
 
@@ -510,7 +628,7 @@ function loadDishes(chef_id){
 				$('#chef-foods').html('<center>No Dishes Found</center>');
 			}
 		}else { 
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
 			BAlert.modal();
 		}
@@ -532,7 +650,7 @@ var ppApp = {
 		//alert('initPaymentUI');
 		var clientIDs = {
 			"PayPalEnvironmentProduction": "Abd6gqI-wgpVBdCHvBhYEuJZZtFL7ybnizVC0eOyVnBTWc--CyUf7dE44ZsVkF4pZdz6SkO2GAg4sf1c",
-			"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
+			//"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
 		};
 		try {
 			PayPalMobile.init(clientIDs, ppApp.onPayPalMobileInit);
@@ -552,13 +670,11 @@ var ppApp = {
 		}).fail(  ajaxError )
 		.done(function(data){
 			if (data.Success == 'true') {
-				BAlert.find('.modal-header h3').html('<i class="fa fa-check"></i> Success');
-				BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
-				BAlert.modal();
+				
+				SuccessModalWithParm(data);
+			
 			}else { 
-				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-				BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-				BAlert.modal();
+				ErrorModalWithParm(data);
 			}
 			if (data.JS) { eval(data.JS); }
 		
@@ -567,7 +683,7 @@ var ppApp = {
 	
 	configuration: function() {
 		var config = new PayPalConfiguration({
-			merchantName: "Foodie",
+			merchantName: "Fudi",
 			merchantPrivacyPolicyURL: "https://foodiesys.com/policy",
 			merchantUserAgreementURL: "https://foodiesys.com/agreement"
 		});
@@ -589,11 +705,11 @@ var ppApp = {
 		// must be called
 		// use PayPalEnvironmentNoNetwork mode to get look and feel of the flow
 		//alert('onPayPalMobileInit');
-		if( localStorage.getItem('userId') == '-13' ){
-			PayPalMobile.prepareToRender("PayPalEnvironmentSandbox", ppApp.configuration(), ppApp.onPrepareRender);
-		}else{
+		//if( localStorage.getItem('userId') == '-13' ){
+			//PayPalMobile.prepareToRender("PayPalEnvironmentSandbox", ppApp.configuration(), ppApp.onPrepareRender);
+		//}else{
 			PayPalMobile.prepareToRender("PayPalEnvironmentProduction", ppApp.configuration(), ppApp.onPrepareRender);
-		}	
+		//}	
 	},
 	onUserCanceled: function(result) {
 		//console.log(result);

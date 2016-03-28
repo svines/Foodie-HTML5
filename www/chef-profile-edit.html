@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -20,18 +20,30 @@
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
-			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
-			<li><a class="sub" href="map.html">Chefs</a></li>
-			<li><a class="sub" href="user-profile.html">My Profile</a></li>
-			<li><a class="sub" href="reservations.html">My Orders</a></li>
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
 		</ul>
 	</nav>
 </div>
 <div id="user-profile-page" class="content">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
-		<p class="pageTitle">Edit Chef Profile</p>
+		<p class="pageTitle" data-bind="text: lang.Edcp">Edit Chef Profile</p>
 	</h1>
-	<div id="topAlert" style="display:none" class="alert alert-warning"><i class="fa fa-warning"></i> Please fill your chef profile below to register as a chef; however your profile will be active once approved by our staff.</div>
+	<div id="topAlert" style="display:none" class="alert alert-warning"><i class="fa fa-warning"></i> <span data-bind="text: lang.Pfysp">Please fill your chef profile below to register as a chef; however your profile will be active once approved by our staff.</span></div>
 	
 	
 	<div id="aLoading" class="aLoading text-center" style="display:none"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
@@ -39,39 +51,39 @@
 	<form id="user-form" style="display:none">
 		<div class="form-group">
 			<div id="image-upload" class="text-center" onClick="uploadImage()"> <img id="pimage" src="images/no-pic.jpg" height="100" /> </div>
-			<div id="picture_msg" class="text-center help-block"> Tap on picture to change/upload </div>
+			<div id="picture_msg" class="text-center help-block"> <span data-bind="text: lang.Toponpic">Tap on picture to change/upload</span> </div>
 		</div>
 		<div class="form-group">
-			<label for="">Company Name</label>
+			<label data-bind="text: lang.CompanyName">Company Name</label>
 			<input class="form-control required" type="text" name="company" value=""  placeholder="Company Name">
 		</div>
 		<div class="form-group col-xs-6">
-			<label for="">First Name</label>
+			<label data-bind="text: lang.FirstName">First Name</label>
 			<input class="form-control" type="text" name="first_name" value=""  placeholder="First Name">
 		</div>
 		<div class="form-group col-xs-6 last">
-			<label for="">Last Name</label>
+			<label data-bind="text: lang.LastName">Last Name</label>
 			<input class="form-control" type="text" name="last_name" value="" placeholder="Last Name">
 		</div>
 		<div class="form-group">
-			<label for="">Paypal Email</label>
-			<input class="form-control required email" type="email" name="email" value="" placeholder="Paypal Email">
-			<p class="help-block">Enter your corporate PayPal email address where you will receive Foodie payments.</p>
+			<label data-bind="text: lang.PaypalEmail">Paypal Email</label>
+			<input class="form-control required email" type="email" name="email" value="">
+			<p class="help-block" data-bind="text: lang.PaypalHlp"></p>
 		</div>
 		<div class="form-group">
-			<label for="">Phone</label>
-			<input class="form-control required" type="phone" name="phone" value="" placeholder="Phone">
+			<label data-bind="text: lang.Phone">Phone</label>
+			<input class="form-control required" type="phone" name="phone" value="" >
 		</div>
 		<div class="form-group">
-			<label for="">Address</label>
-			<input class="form-control required" type="text" name="address" value=""  placeholder="Address">
+			<label data-bind="text: lang.Address">Address</label>
+			<input class="form-control required" type="text" name="address" value="">
 		</div>
 		<div class="form-group">
-			<label for="">City</label>
-			<input class="form-control required" type="text" name="city" value=""  placeholder="City">
+			<label data-bind="text: lang.City">City</label>
+			<input class="form-control required" type="text" name="city" value="">
 		</div>
 		<div class="form-group col-xs-6">
-			<label for="">State</label>
+			<label data-bind="text: lang.State">State</label>
 			<select class="form-control required" name="state" id="state">
 				<option value="">-- Select State --</option>
 				<option value="AL">Alabama</option>
@@ -128,30 +140,31 @@
 			</select>
 		</div>
 		<div class="form-group col-xs-6 last">
-			<label for="">Zip</label>
-			<input class="form-control required" type="text" name="zip" value="" id="zip" placeholder="Zip">
+			<label data-bind="text: lang.Zip">Zip</label>
+			<input class="form-control required" type="text" name="zip" value="" id="zip" >
 		</div>
 		
 		<div class="form-group">
-			<label for="">Seating Capacity</label>
-			<input class="form-control required" type="number" name="capacity" value="" id="capacity" placeholder="Seating Capacity">
+			<label data-bind="text: lang.FirstName">Seating Capacity</label>
+			<input class="form-control required" type="number" name="capacity" value="" id="capacity" >
 		</div>
 		
 		<div class="form-group">
-			<label for="">Referral Email (Optional)</label>
-			<input id="txtReferalEmail" class="form-control email" type="email" name="referral_email" value="" placeholder="Referral Email">
+			<label data-bind="text: lang.REo">Referral Email (Optional)</label>
+			<input id="txtReferalEmail" class="form-control email" type="email" name="referral_email" value="" >
 		</div>
 		
 		<input type="hidden" name="image1" id="hd_image1" value="" />
 		<input type="hidden" name="image2" id="hd_image2" value="" />
 		
-		<button type="submit" id="btnSubmit" class="btn btn-primary btn-block btn-submit">Submit</button>
+		<button type="submit" id="btnSubmit" class="btn btn-primary btn-block btn-submit" data-bind="text: lang.Submit">Submit</button>
 	</form>
 </div>
 <script src="cordova.js"></script> 
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
+<script src='js/knockout-3.4.0.js'></script> 
 <script src="js/common.js"></script> 
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script> 
 
@@ -176,7 +189,7 @@ $(document).ready(function(e) {
 			setSubmitButton();
 			initMenu();
 		} else { 
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
 			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
 			BAlert.modal();
 		}
@@ -200,21 +213,19 @@ $(document).ready(function(e) {
 			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 			$.ajax({
 				type: "POST", dataType: 'json', url: ServerAjax+"?h=chefUpdate", data: formData,
-				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
 			.done(function(data){
 				if (data.Success == 'true') {
 					localStorage.setItem('chefData', data.chefData );
 					localStorage.setItem('chefStatus', data.chefStatus );
-					BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
-					BAlert.find('.modal-body').html('<p class="text-success">Your profile has been updated successfuly.</p>');
+					BAlert.find('.modal-header h3').html('<i class="fa check"></i>'+cLan.Success);
+					BAlert.find('.modal-body').html('<p class="text-success">'+cLan.ProfileUpdated+'.</p>');
 					BAlert.modal();
 					setSubmitButton();
 				} else { 
-					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-					BAlert.modal();
+					ErrorModalWithParm(data);
 				}
 				if (data.JS) { eval(data.JS); }
 			
@@ -264,10 +275,10 @@ function uploadImage() {
 			var img = $('#pimage');
 			var imageURI = uri;
 			if (!imageURI) {
-				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				$('#picture_msg').html(cLan.ToponpicGal);
 				return;
 			}else{
-				$('#picture_msg').html("Uploading..");	
+				$('#picture_msg').html(cLan.Uploading);	
 			}
 			// Verify server has been entered
 			//server = 'http://mobileapi.foodiesys.com/foodie-mssql/upload.php';
@@ -282,7 +293,7 @@ function uploadImage() {
 			// Transfer picture to server
 			var ft = new FileTransfer();
 			ft.upload(imageURI, server, function(r) {
-				$('#picture_msg').html("Tap on picture to select image from gallery.");
+				$('#picture_msg').html(cLan.ToponpicGal);
 				if (r.response.match("^Error")){
 					$('#picture_msg').html(r.response);
 				}else{
@@ -292,7 +303,7 @@ function uploadImage() {
 			},
 
 			function(error) {
-				$('#picture_msg').html("Upload failed: Code = " + error.code);
+				$('#picture_msg').html(cLan.Uploadfailed+" : Code = " + error.code);
 			}, options);
 
 		} catch (exce) {
@@ -302,7 +313,7 @@ function uploadImage() {
 
 	function(e) {
 		console.log("Error getting picture: " + e);
-		$('#picture_msg').html("No Image Found");
+		$('#picture_msg').html(cLan.NoPic);
 	}, {
 		quality: 60,
 		destinationType: navigator.camera.DestinationType.FILE_URI,
@@ -315,10 +326,10 @@ function uploadImage() {
 function setSubmitButton(){
 	$('#btnSubmit').removeClass('disabled');
 	if(localStorage.getItem('chefStatus')== '1' ){ // pending approval
-		$('#btnSubmit').html('Pending Approval').addClass('disabled');
+		$('#btnSubmit').html(cLan.PendingApproval).addClass('disabled');
 		$('#txtReferalEmail').prop('disabled', true)
 	}else if(localStorage.getItem('chefStatus')== '2' ){ // approved/active
-		$('#btnSubmit').html('UPDATE');
+		$('#btnSubmit').html(cLan.UPDATE);
 		$('#txtReferalEmail').prop('disabled', true);
 	}
 }

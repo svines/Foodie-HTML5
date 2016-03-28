@@ -16,9 +16,6 @@
 <link href="css/styles.css" rel="stylesheet">
 </head>
 <body id="wrapper">
-
-
-
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
@@ -27,6 +24,7 @@
 			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
 			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
 			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
 			
 			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
 			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
@@ -35,9 +33,8 @@
 			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
 			
-			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
 			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
-			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Loguout"></a></li>
 		</ul>
 	</nav>
 </div>
@@ -156,6 +153,7 @@
 
 
 
+
 var resData;
 
 $(document).ready(function(e) {
@@ -234,12 +232,10 @@ $(document).ready(function(e) {
 					$('#popFinish').modal('hide');
 					if( $('#comments').val().length > 3 ){
 						BAlert.find('.modal-header h3').html('<i class="fa check"></i> '+cLan.Success);
-						BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'<br>'+cLan.WouldyouFacebook+' <br/> <button type="button" class="btn btn-success btnShareFB">'+cLan.YesFacebook+'</button> </p>');
+						BAlert.find('.modal-body').html('<p class="text-success">'+cLan['206']+'<br>'+cLan.WouldyouFacebook+' <br/> <button type="button" class="btn btn-success btnShareFB">'+cLan.YesFacebook+'</button> </p>');
 						BAlert.modal();
 					}else{
-						BAlert.find('.modal-header h3').html('<i class="fa check"></i> '+cLan.Success);
-						BAlert.find('.modal-body').html('<p class="text-success">'+data.Msg+'</p>');
-						BAlert.modal();
+						ErrorModalWithParm(data);
 					}
 				} else { 
 					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);

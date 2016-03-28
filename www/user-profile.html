@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Foodie</title>
+<title>Fudi</title>
 
 <!-- Sets initial viewport load and disables zooming  -->
 <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -19,45 +19,57 @@
 <div id="sidebar-wrapper">
 	<nav id="nav">
 		<ul class="sidebar-nav nav" id="navRight">
-			<li class="menu-heading"><strong><a href="#">FOODIE</a></strong></li>
-			<li><a class="sub" href="map.html">Chefs</a></li>
-			<li><a class="sub" href="user-profile.html">My Profile</a></li>
-			<li><a class="sub" href="reservations.html">My Orders</a></li>
+			<li class="menu-heading"><strong><a href="#" data-bind="text: lang.Fudi"></a></strong></li>
+			<li><a class="sub" href="map.html" data-bind="text: lang.Chefs"></a></li>
+			<li><a class="sub" href="user-profile.html" data-bind="text: lang.MyProfile"></a></li>
+			<li><a class="sub" href="reservations.html" data-bind="text: lang.MyOrders"></a></li>
+			<li><a class="sub" href="notifications.html" data-bind="text: lang.Notifications"></a></li>
+			
+			<li class="menu-heading"><strong><a data-bind="text: lang.CHEF" href="#"></a></strong></li>
+			<li class="noChef"><a class="sub" data-bind="text: lang.BecomeaChef" href="chef-profile-edit.html"></a></li>
+			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
+			
+			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
+			<li><a href="about.html" data-bind="text: lang.AboutFudi"></a></li>
+			<li><a href="register.html?do=logout" data-bind="text: lang.Logout"></a></li>
 		</ul>
 	</nav>
 </div>
 <div id="user-profile-page" class="content">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a> </h1>
-	<p class="pageTitle">User Profile</p>
+	<p class="pageTitle" data-bind="text: lang.UserProfile"></p>
 	
 	<form id="user-form" >
 		<div class="form-group col-xs-6 ">
-			<label for="">First Name</label>
-			<input class="form-control required" type="text" name="first_name" value=""  placeholder="First Name">
+			<label data-bind="text: lang.FirstName"></label>
+			<input class="form-control required" type="text" name="first_name" value="" data-bind="attr: { placeholder: lang.FirstName }" placeholder="First Name">
 		</div>
 		<div class="form-group col-xs-6 last">
-			<label for="">Last Name</label>
-			<input class="form-control required" type="text" name="last_name" value="" placeholder="Last Name">
+			<label data-bind="text: lang.LastName"></label>
+			<input class="form-control required" type="text" name="last_name" value="" data-bind="attr: { placeholder: lang.LastName }" placeholder="Last Name">
 		</div>
 		
 		<div class="form-group">
-			<label for="">Email</label>
-			<input class="form-control" type="email" name="email" value="" placeholder="Email" readonly>
+			<label data-bind="text: lang.Email"></label>
+			<input class="form-control" type="email" name="email" value="" data-bind="attr: { placeholder: lang.Email }" placeholder="Email" readonly>
 		</div>
 		<div class="form-group">
-			<label for="">Phone</label>
-			<input class="form-control required" type="phone" name="phone" value="" placeholder="Phone">
+			<label data-bind="text: lang.Phone"></label>
+			<input class="form-control required" type="phone" name="phone" value="" data-bind="attr: { placeholder: lang.Phone }" placeholder="Phone">
 		</div>
 		<div class="form-group">
-			<label for="">Address</label>
-			<input class="form-control" type="text" name="address" value=""  placeholder="Address">
+			<label data-bind="text: lang.Address"></label>
+			<input class="form-control" type="text" name="address" value="" data-bind="attr: { placeholder: lang.Address }"  placeholder="Address">
 		</div>
 		<div class="form-group">
-			<label for="">City</label>
-			<input class="form-control required" type="text" name="city" value=""  placeholder="City">
+			<label data-bind="text: lang.City"></label>
+			<input class="form-control required" type="text" name="city" value="" data-bind="attr: { placeholder: lang.City }"  placeholder="City">
 		</div>
 		<div class="form-group col-xs-6">
-			<label for="">State</label>
+			<label data-bind="text: lang.State"></label>
 			<select class="form-control required" name="state" id="state">
 				<option value="">-- Select State --</option>
 				<option value="AL">Alabama</option>
@@ -114,10 +126,10 @@
 			</select>
 		</div>
 		<div class="form-group col-xs-6 last">
-			<label for="">Zip</label>
-			<input class="form-control required" type="text" name="zip" value="" id="zip" placeholder="Zip">
+			<label data-bind="text: lang.Zip"></label>
+			<input class="form-control required" type="text" name="zip" value="" id="zip" data-bind="attr: { placeholder: lang.Zip }" placeholder="Zip">
 		</div>
-		<button type="submit" class="btn btn-positive btn-block btn-submit">Save</button>
+		<button type="submit" class="btn btn-positive btn-block btn-submit" data-bind="text: lang.Save"></button>
 	</form>
 </div>
 <br />
@@ -129,17 +141,19 @@
 <div id="bottom-bar">
 	<div class="container">
 		<div class="row">
-			<div class="col-xs-4 no-padding"> <a class="tab-item " href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> 
+			<div class="col-xs-3 no-padding"> <a class="tab-item " href="map.html"> <img class="tab-icon" src="images/map-icon.png" alt="map-icon"> 
 				<!-- <i class="fa fa-map-o tab"></i> --> 
 				<img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-4 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
-			<div class="col-xs-4 no-padding"> <a class="tab-item active" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item" href="reservations.html"> <img class="tab-icon" src="images/food-icon.png" alt="food-icon"> <img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item active" href="user-profile.html"> <img class="tab-icon" src="images/profile-icon.png" alt="map-icon"><img class="border-image" src="images/border-image.png" alt="border-image"> </a> </div>
+			<div class="col-xs-3 no-padding"> <a class="tab-item " id="anoti" href="notifications.html"> <img class="tab-icon" src="images/notification-icon.png" alt="map-icon"> </a>	</div>
 		</div>
 	</div>
 </div>
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
+<script src='js/knockout-3.4.0.js'></script>
 <script src="js/common.js"></script> 
 <script>
 
@@ -172,14 +186,14 @@ $("#user-form").validate({
 			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
 			$.ajax({
 				type: "POST", dataType: 'json', url: ServerAjax+"?h=userUpdate", data: formData,
-				beforeSend: function() { waitingDialog.show('Loading', {dialogSize: 'sm', progressType: 'info'}); },
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
 				complete: function() { waitingDialog.hide(); },
 			}).fail(  ajaxError )
 			.done(function(data){
 				if (data.Success == 'true') {
 					localStorage.setItem('userData', data.userData );
-					BAlert.find('.modal-header h3').html('<i class="fa check"></i> Success');
-					BAlert.find('.modal-body').html('<p class="text-success">Your profile has been updated successfuly.</p>');
+					BAlert.find('.modal-header h3').html('<i class="fa check"></i>'+cLan.Success);
+					BAlert.find('.modal-body').html('<p class="text-success">'+cLan.ProfileUpdated+'</p>');
 					if(!empty(RetPage)){
 						BAlert.find('.btn-primary').on("click", function(){
 							document.location = 'chef_profile.html?id='+RetPage;
@@ -188,9 +202,7 @@ $("#user-form").validate({
 					
 					BAlert.modal();
 				} else { 
-					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
-					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-					BAlert.modal();
+					ErrorModalWithParm(data);
 				}
 				if (data.JS) { eval(data.JS); }
 			}); // ajax	
