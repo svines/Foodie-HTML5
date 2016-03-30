@@ -24,7 +24,8 @@
         <param name="APP_ID" value="1429053297422142" />
         <param name="APP_NAME" value="Foodie" />
     </plugin>
-		<gap:plugin name="cordova-plugin-geolocation"  source="npm" />
+	
+	<gap:plugin name="cordova-plugin-geolocation"  source="npm" />
 	<gap:plugin name="com.paypal.cordova.mobilesdk" source="npm" />
 	<plugin name="cordova-plugin-whitelist" spec="1" />
 	<plugin name="cordova-plugin-camera"  source="pgb" />
