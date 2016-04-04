@@ -236,7 +236,7 @@
 
 <!-- Script --> 
 <script type="text/javascript" src="cordova.js"></script> 
-<script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script> 
+<script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script>
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script>
@@ -514,11 +514,15 @@ $(document).ready(function(e) {
 			.done(function(data){
 				if (data.Success == 'true') {
 					/**///=========== PayPal ===========
-					if(empty(OrderId)){
-						OrderId = data.ResId ;
-						ppApp.Amount = Total;
-						ppApp.Description = 'Fudi Reservation '+data.ResId;
-						ppApp.initialize();
+					try{
+						if(empty(OrderId)){
+							OrderId = data.ResId ;
+							ppApp.Amount = Total;
+							ppApp.Description = 'Fudi Reservation '+data.ResId;
+							ppApp.initialize();
+						}
+					} catch (err) {
+						alert(err);
 					}
 					/**///=========== /PayPal ==========
 				} else { 
@@ -650,7 +654,7 @@ var ppApp = {
 		//alert('initPaymentUI');
 		var clientIDs = {
 			"PayPalEnvironmentProduction": "Abd6gqI-wgpVBdCHvBhYEuJZZtFL7ybnizVC0eOyVnBTWc--CyUf7dE44ZsVkF4pZdz6SkO2GAg4sf1c",
-			//"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
+			"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
 		};
 		try {
 			PayPalMobile.init(clientIDs, ppApp.onPayPalMobileInit);
@@ -708,7 +712,11 @@ var ppApp = {
 		//if( localStorage.getItem('userId') == '-13' ){
 			//PayPalMobile.prepareToRender("PayPalEnvironmentSandbox", ppApp.configuration(), ppApp.onPrepareRender);
 		//}else{
+		try{	
 			PayPalMobile.prepareToRender("PayPalEnvironmentProduction", ppApp.configuration(), ppApp.onPrepareRender);
+		} catch (err) {
+			alert(err);
+		}	
 		//}	
 	},
 	onUserCanceled: function(result) {
