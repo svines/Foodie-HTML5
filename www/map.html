@@ -100,6 +100,7 @@ html, body {
 			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.DeliverySchedule" href="delivery-schedule.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
 			
 			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
@@ -146,6 +147,8 @@ var markersArray = [];
 var myLatLng;
 var infowindow;
 
+var DineDiv, DeliveryDiv;
+
 function onDeviceReady() {
 	initMap();
 	useragent = navigator.userAgent;
@@ -169,16 +172,31 @@ function initMap(){
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		zoom:9,
 		scrollwheel: false,
+		mapTypeControl: false
 	};
 					 
 	map = new google.maps.Map(document.getElementById('map'), mapOptions);
    infowindow = new google.maps.InfoWindow({maxWidth: 400});
 
+
+	DineDiv = document.createElement('div');
+	DineDiv.className = 'TogActive';
+	var dineControl = new DineControl(DineDiv, map);
+	DineDiv.index = 2;
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(DineDiv);
+	
+	DeliveryDiv = document.createElement('div');
+	var deliveryControl = new DeliveryControl(DeliveryDiv, map);
+	DeliveryDiv.index = 2;
+	map.controls[google.maps.ControlPosition.TOP_LEFT].push(DeliveryDiv);
+	
+	
 	var centerControlDiv = document.createElement('div');
 	var centerControl = new CenterControl(centerControlDiv, map);
-	
 	centerControlDiv.index = 1;
 	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(centerControlDiv);
+
+	
 
 	var imageA = new google.maps.MarkerImage(
 							'images/bluedot_retina.png',
@@ -286,34 +304,106 @@ $(document).ready(function(e) {
 });
 
 
-
-
-function CenterControl(controlDiv, map) {
+function DineControl(controlDiv, map) { // center 
 	// Set CSS for the control border.
 	var controlUI = document.createElement('div');
-	controlUI.style.backgroundColor = '#fff';
-	controlUI.style.border = '2px solid #fff';
-	controlUI.style.borderRadius = '3px';
-	controlUI.style.boxShadow = '0 2px 4px rgba(0,0,0,.3)';
+	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.borderRadius = '2px';
+	controlUI.style.boxShadow = '0 2px 2px rgba(0,0,0,.3)';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.marginTop = '6px';
+	controlUI.style.marginLeft = '6px';
+
+	controlUI.style.textAlign = 'center';
+	controlUI.title = '';
+	controlDiv.appendChild(controlUI);
+	
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.style.color = '#FFFFFF';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	controlText.style.fontSize = '16px';
+	controlText.style.lineHeight = '30px';
+	controlText.style.paddingLeft = '8px';
+	controlText.style.paddingRight = '8px';
+	controlText.innerHTML = 'Dine';
+	controlUI.appendChild(controlText);
+	
+	// Setup the click event listeners: simply set the map to Chicago.
+	controlUI.addEventListener('click', function() {
+		//map.panTo(myloc.getPosition());
+		DeliveryDiv.className = '';
+		DineDiv.className = 'TogActive';
+		for (var i = 0; i < markersArray.length; i++ ) {
+			if( markersArray[i].dine_dishes > 0 || markersArray[i].mcolor == 'red' ){
+				markersArray[i].setVisible(true);
+			}else{
+				markersArray[i].setVisible(false);
+			}
+		}
+		
+	});
+}
+function DeliveryControl(controlDiv, map) { // center 
+	// Set CSS for the control border.
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.borderRadius = '2px';
+	controlUI.style.boxShadow = '0 2px 2px rgba(0,0,0,.3)';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.marginTop = '6px';
+	controlUI.style.marginLeft = '1px';
+
+	controlUI.style.textAlign = 'center';
+	controlUI.title = '';
+	controlDiv.appendChild(controlUI);
+	
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.style.color = '#FFFFFF';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	controlText.style.fontSize = '16px';
+	controlText.style.lineHeight = '30px';
+	controlText.style.paddingLeft = '8px';
+	controlText.style.paddingRight = '8px';
+	controlText.innerHTML = 'Delivery';
+	controlUI.appendChild(controlText);
+	
+	// Setup the click event listeners: simply set the map to Chicago.
+	controlUI.addEventListener('click', function() {
+		
+		DeliveryDiv.className = 'TogActive';
+		DineDiv.className = '';
+		for (var i = 0; i < markersArray.length; i++ ) {
+			if( markersArray[i].delivery_dishes > 0 || markersArray[i].mcolor == 'red' ){
+				markersArray[i].setVisible(true);
+			}else{
+				markersArray[i].setVisible(false);
+			}
+		}
+		
+	});
+}
+
+
+function CenterControl(controlDiv, map) { // center 
+	// Set CSS for the control border.
+	var controlUI = document.createElement('div');
 	controlUI.style.cursor = 'pointer';
 	controlUI.style.marginBottom = '12px';
 	controlUI.style.marginTop = '12px';
 	controlUI.style.marginRight = '10px';
 	controlUI.style.textAlign = 'center';
-	controlUI.title = 'Click to recenter the map';
 	controlDiv.appendChild(controlUI);
-	
 	// Set CSS for the control interior.
-	var controlText = document.createElement('div');
-	controlText.style.color = 'rgb(25,25,25)';
-	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-	controlText.style.fontSize = '12px';
-	controlText.style.lineHeight = '30px';
-	controlText.style.paddingLeft = '5px';
-	controlText.style.paddingRight = '5px';
-	controlText.innerHTML = 'Center Map';
+	var controlText = document.createElement('IMG');
+	controlText.style.width = '36px';
+	controlText.style.height = '36px';
+	controlText.style.cursor = 'pointer';
+	controlText.width = '36';
+	controlText.height = '66';
+	controlText.src = 'images/center.png?';
 	controlUI.appendChild(controlText);
-
 	// Setup the click event listeners: simply set the map to Chicago.
 	controlUI.addEventListener('click', function() {
 		map.panTo(myloc.getPosition());
@@ -332,13 +422,23 @@ function loadMarkers(){
 		var jsonData = JSON.parse(localStorage.getItem('nearbyChefs'));
 		for (var i = 0; i < jsonData.length; i++) {
 			chef = jsonData[i];
+			if(empty(chef.dine_dishes)&&empty(chef.delivery_dishes)){ // not dishes, mark him red
+				jsonData[i].mcolor = 'red';
+				chef.mcolor = 'red';
+			}
+			
+			
 			marker = new google.maps.Marker({
 				position: new google.maps.LatLng( chef.lat, chef.lng),
 				map: map,
+				dine_dishes: chef.dine_dishes ,
+				delivery_dishes: chef.delivery_dishes,
+				mcolor: chef.mcolor
 			});
 			mColor = '|E44744|000000'; // red
 			if( chef.mcolor == 'blue')  mColor = '|437CE5|000000'; // blue
 			if( chef.mcolor == 'green')  mColor = '|5CB85C|000000'; // green
+			//console.log(chef);
 			
 			marker.setIcon('http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld='+chef.company.charAt(0)+mColor );
 			markersArray.push(marker);
@@ -352,13 +452,22 @@ function loadMarkers(){
 						r = (Math.round(r * 2) / 2).toFixed(1);
 					}
 					ri = '<img src="images/'+r+'.gif" alt="" /> ('+ r2 + '/5)<br>'+cLan['in']+' '+jsonData[i].rating_count+' '+cLan.Reviews ;
-					var c = '';
+					
+					var img = '<img src="images/no-pic3.jpg" class="img-rounded" style="width:100%;"  />';
 					if(!empty(jsonData[i].image1)){
-						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'"><img src="http://mobileapi.foodiesys.com/foodie-mssql/pics/'+jsonData[i].image1+'" class="img-rounded" style="width:100%;"  /></a></div>';
+						img = '<img src="http://mobileapi.foodiesys.com/foodie-mssql/pics/'+jsonData[i].image1+'" class="img-rounded" style="width:100%;"  />';
+					}
+					
+					if( jsonData[i].mcolor == 'red' ){
+						c = '<div class="col-xs-5 no-lft-padding"><span>'+img+'</span></div>';
+						c = c +	'<div class="col-xs-7 no-padding"><strong><span>'+jsonData[i].company+'</span></strong>';
 					}else{
-						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'"><img src="images/no-pic3.jpg" class="img-rounded" style="width:100%;"  /></a></div>';
-					}	
-						c = c +	'<div class="col-xs-7 no-padding"><strong><a href="chef_profile.html?id='+jsonData[i].id+'">'+jsonData[i].company+'</a></strong><br />'+cLan.PeopleServed+': '+jsonData[i].people_served+'<br>'+cLan.FoodCost+': '+jsonData[i].food_cost+'<br />';
+						c = '<div class="col-xs-5 no-lft-padding"><a href="chef_profile.html?id='+jsonData[i].id+'">'+img+'</a></div>';
+						c = c +	'<div class="col-xs-7 no-padding"><strong><a href="chef_profile.html?id='+jsonData[i].id+'">'+jsonData[i].company+'</a></strong>';
+					}
+					
+					
+						c = c +	'<br />'+cLan.PeopleServed+': '+jsonData[i].people_served+'<br>'+cLan.FoodCost+': '+jsonData[i].food_cost+'<br />';
 						c = c +	ri+'</div><div class="clearfix"></div><strong>'+cLan.Address+':</strong> '+jsonData[i].address+', '+jsonData[i].city+' '+jsonData[i].state+' '+jsonData[i].zip;
 						//c = c +  '<a href="#" rel="'+jsonData[i].id+'" class="btn btn-xs btn-primary pull-right aResv">Reservation</a>';
 					infowindow.setContent(c);

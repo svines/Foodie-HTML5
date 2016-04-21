@@ -56,6 +56,7 @@
 			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.DeliverySchedule" href="delivery-schedule.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
 			
 			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
@@ -104,7 +105,12 @@
 			</div>
 		</div>
 	</div>
-	<h2 class="text-center"><span data-bind="text: lang.AvailableDishes"></span> <button id="btnStartOrder" class="btn btn-primary disabled" data-bind="text: lang.OrderNow"></button></h2>
+	<h2 class="text-center"><span data-bind="text: lang.AvailableDishes"></span>
+	<div>
+	<button id="btnStartOrder" class="btn btn-primary disabled" data-bind="text: lang.OrderNow"></button>
+	<button id="btnStartDeliveryOrder" class="btn btn-primary disabled" data-bind="text: lang.DeliveryOrder"></button>
+	</div>
+	</h2>
 	<div id="chef-foods">
 		<div class="food-listing hidden">
 			<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left" src="images/food-1.png" align="food img"> </div>
@@ -149,14 +155,13 @@
 	</div>
 </div>
 
-
 <div class="modal fade" id="popReserve" tabindex="-1" role="dialog" aria-hidden="true">
 	<div class="modal-dialog">
 		
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="popReserve" data-bind="text: lang.AddReservation"></h4>
+				<h4 class="modal-title"  data-bind="text: lang.AddReservation"></h4>
 			</div>
 			<div class="modal-body">
 				<form method="post" id="frmReserve">
@@ -197,16 +202,9 @@
 							<ul class="list-group">
 							</ul>
 						</div>
-						<h2 id="d_total" style="color:#C00"><span data-bind="text: lang.Total">Total</span> : $0.00</h2>
+						<h2 style="color:#C00"><span data-bind="text: lang.Total">Total</span> : <span id="d_total">$0.00</span></h2>
 					</div>
 					
-					
-					
-					<input type="hidden" id="dish_id" name="dish_id">
-					<input type="hidden" id="chef_id" name="chef_id">
-					<input type="hidden" id="user_id" name="user_id">
-					<input type="hidden" id="unit_price" name="unit_price">
-					<input type="hidden" id="res_id" name="res_id">
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -218,6 +216,85 @@
 		
 	</div>
 </div>
+
+
+
+
+<div class="modal fade" id="popDeliveryOrder2" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" data-bind="text: lang.DeliveryOrder"></h4>
+			</div>
+			<div class="modal-body">
+				<form method="post" id="frmReserve2">
+					
+					<div id="StepD1">
+						<div class="form-group">
+							<label _data-bind="text: lang.Time">Additional delivery info <span class="small">(such as Apt or Suite)</span> </label>
+							<div class="">
+								<input type="text" name="d_address" id="d_address" class="form-control required" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label data-bind="text: lang.Pickadate"></label>
+							<div style="overflow:hidden; border:2px solid #DDD; padding:5px 5px 0 5px" >
+								<div class="form-group">
+									<div class="row">
+										<div class="col-md-8">
+											<div id="datetimepickerD"></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<input type="hidden" name="d_date2" id="d_date2" value="" />
+						</div>
+						<div class="form-group">
+							<label data-bind="text: lang.Time">Time</label>
+							<div class="">
+								<select name="d_time2" id="d_time2" class="form-control required">
+									<option data-bind="text: lang.SelectTime" value=""></option>
+								</select>
+							</div>
+						</div>
+					</div>
+					
+					<div id="StepD2">
+						<h4  data-bind="text: lang.SelectDishes"></h4>
+						<div id="spAvDishes2">
+							<ul class="list-group">
+							</ul>
+						</div>
+						<h4 style="color:#666"><span data-bind="text: lang.Deliverycharges2"></span> : <span id="d_charges">$0.00</span></h4>
+						<h2 style="color:#C00"><span data-bind="text: lang.Total"></span> : <span id="d_total2">$0.00</span></h2>
+					</div>
+					<input type="hidden" id="delivery_charges" name="delivery_charges">
+					
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" data-bind="text: lang.Cancel"></button>
+				<button id="btnNextD" type="button" class="btn btn-primary"><span data-bind="text: lang.Next">Next</span> <i class="fa fa-arrow-circle-o-right"></i></button>
+				<button id="btnOrderD" type="button" class="btn btn-primary" data-bind="text: lang.OrderNow">Order Now</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+<div class="modal modal-fullscreen fade" id="popDeliveryOrder" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog" style="height:100%; width:100%;">
+		<div class="modal-content " style="height:100%; width:100%;">
+			<div class="modal-body" style="height:100%; width:100%;">
+				<div id="map" style="height:100%; width:100%;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <div id="bottom-bar">
 	<div class="container">
 		<div class="row">
@@ -234,28 +311,227 @@
 	</div>
 </div>
 
-<!-- Script --> 
+<!-- Script -->
+
 <script type="text/javascript" src="cordova.js"></script> 
 <script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script>
+
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script>
+<script src="http://maps.google.com/maps/api/js?key=AIzaSyBrGQ3WXjDyt6lu6OLS4RDNBXYb3Wr-l_Y"></script>
 <script src='js/knockout-3.4.0.js'></script> 
 <script src="js/common.js"></script> 
 <script src="js/moment.min.js"></script> 
-<script src="js/bootstrap-datetimepicker.min.js"></script> 
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+
 <script>
 
 var dishData;
 var DishAv;			// from server 0-n index
 var DishAvO = {}; // date index
+
+var DishAv2;			// from server 0-n index - for delivery
+var DishAvO2 = {}; // date index - for delivary
+
 var thisDate;
 var Total;
 var OrderId = null; 
 var chef_id = null;
 
+var chef_data;
+
+var map;
+var myLatLng;
+var controlDiv2;	// Set Delivery Location button
+var controlDiv4;  // geo Address;
+var geocoder ;
+
+
+function MyControl(controlDiv, map) {
+	var controlImg = document.createElement('IMG');
+	controlImg.style.width = '96px';
+	controlImg.style.height = '96px';
+	//controlImg.style.marginBottom = '30px';
+	controlImg.width = '96';
+	controlImg.height = '96';
+	controlImg.src = 'images/green-home2.png?3';
+	controlDiv.appendChild(controlImg);
+}
+function MyControl2(controlDiv, mapp) {
+	// Set CSS for the control border.
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.border = '2px solid #3e3e3e';
+	controlUI.style.borderRadius = '3px';
+	controlUI.style.boxShadow = '0 2px 4px rgba(0,0,0,.3)';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.marginTop = '-115px';
+
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Click to recenter the map';
+	controlDiv.appendChild(controlUI);
+	
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.style.color = '#FFFFFF';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	controlText.style.fontSize = '18px';
+	controlText.style.lineHeight = '30px';
+	controlText.style.paddingLeft = '8px';
+	controlText.style.paddingRight = '8px';
+	controlText.innerHTML = 'Set Delivery Location <img src="images/arrow.png" width="18" height="18" />';
+	controlUI.appendChild(controlText);
+	
+	// Setup the click event listeners: simply set the map to Chicago.
+	controlUI.addEventListener('click', function() {
+		$('#popDeliveryOrder').modal('hide');
+		setTimeout(function() {
+			var Tmp = map.getCenter();
+			localStorage.setItem('Deliverylat', Tmp.lat());
+			localStorage.setItem('Deliverylng', Tmp.lng());
+			console.log(map.getCenter().toString());
+			get_chefDeliverySettings();
+     	}, 800);
+	});
+}
+
+function ControlAddress(controlDiv, map) {
+	// Set CSS for the control border.
+var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.border = '2px solid #3e3e3e';
+	controlUI.style.borderRadius = '3px';
+	controlUI.style.boxShadow = '0 2px 4px rgba(0,0,0,.3)';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.marginTop = '100px';
+	controlUI.style.textAlign = 'center';
+	//controlUI.style.width = '100%';
+	controlUI.title = 'Address here';
+	controlDiv.appendChild(controlUI);
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.className = 'cAddress';
+	controlText.style.color = '#FFFFFF';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	controlText.style.fontSize = '14px';
+	controlText.style.lineHeight = '30px';
+	controlText.style.paddingLeft = '8px';
+	controlText.style.paddingRight = '8px';
+	controlText.innerHTML = '';
+	controlUI.style.width = ($('#map').width()-10)+'px';
+	controlUI.appendChild(controlText);
+	// Setup the click event listeners: simply set the map to Chicago.
+}
+
+function MyControl3(controlDiv, map) {
+	// Set CSS for the control border.
+	var controlUI = document.createElement('div');
+	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.border = '2px solid #3e3e3e';
+	controlUI.style.borderRadius = '3px';
+	controlUI.style.boxShadow = '0 2px 4px rgba(0,0,0,.3)';
+	controlUI.style.cursor = 'pointer';
+	controlUI.style.marginTop = '10px';
+	controlUI.style.marginRight = '10px';
+	
+	controlUI.style.textAlign = 'center';
+	controlUI.title = 'Click to recenter the map';
+	controlDiv.appendChild(controlUI);
+	
+	// Set CSS for the control interior.
+	var controlText = document.createElement('div');
+	controlText.style.color = '#FFFFFF';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+	controlText.style.fontSize = '14px';
+	controlText.style.lineHeight = '30px';
+	controlText.style.paddingLeft = '8px';
+	controlText.style.paddingRight = '8px';
+	controlText.innerHTML = 'Cancel';
+	controlUI.appendChild(controlText);
+
+	// Setup the click event listeners: simply set the map to Chicago.
+	controlUI.addEventListener('click', function() {
+		$('#popDeliveryOrder').modal('hide');
+	});
+}
+function initMap(){
+	console.log('initMap');
+	
+	if(!empty(localStorage.getItem('Deliverylat'))){
+		myLatLng =  new google.maps.LatLng( localStorage.getItem('Deliverylat') , localStorage.getItem('Deliverylng') );		
+	}else{
+		myLatLng =  new google.maps.LatLng( localStorage.getItem('lat') , localStorage.getItem('lng') );
+	}
+	var mapOptions = {
+		center: myLatLng,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoom:15,
+		scrollwheel: false,
+	};
+					 
+	map = new google.maps.Map(document.getElementById('map'), mapOptions);
+	geocoder = new google.maps.Geocoder;
+	
+	var controlDiv = document.createElement('div');
+	var myControl = new MyControl(controlDiv);
+	controlDiv.index = 1;
+	map.controls[google.maps.ControlPosition.CENTER].push(controlDiv);
+	
+	var controlDiv2 = document.createElement('div');
+	
+	var myControl2 = new MyControl2(controlDiv2);
+	controlDiv2.index = 2;
+	map.controls[google.maps.ControlPosition.CENTER].push(controlDiv2);
+	
+	var controlDiv3 = document.createElement('div');
+	var myControl3 = new MyControl3(controlDiv3);
+	controlDiv3.index = 3;
+	map.controls[google.maps.ControlPosition.TOP_RIGHT].push(controlDiv3);
+	
+	controlDiv4 = document.createElement('div');
+	var myControl4 = new ControlAddress(controlDiv4);
+	controlDiv3.index = 4;
+	map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv4);
+	
+	getGeoAddress();
+	
+	
+	map.addListener('dragstart', function() {
+		$(controlDiv2).hide();
+		$(controlDiv4).hide();
+	});
+	map.addListener('dragend', function() {
+		$(controlDiv2).show();
+		$(controlDiv4).show();
+		getGeoAddress();
+	});
+	
+	
+} // end initMap
+
+function DeliveryStep2(){
+	console.log(map.getCenter());
+}
+function getGeoAddress(){
+	var Tmp = map.getCenter();	
+	geocoder.geocode({
+		latLng: Tmp
+	}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) {
+			if (results[0]) {
+				$(controlDiv4).find('div.cAddress').html(results[0].formatted_address);
+				//console.log(results[0]);	//results[0].formatted_address;
+			}
+		} else {
+			$(controlDiv4).find('div.cAddress').html('Unknown');
+		}
+	});	
+}
+
 $(document).ready(function(e) {
 
+	
 	if( empty(localStorage.getItem('userId'))){
 		$('#footerLinksNormal').hide();
 		$('#footerLinksNoLogin').show();
@@ -266,10 +542,10 @@ $(document).ready(function(e) {
 	}
 
 	chef_id = getUrlParameter('id');
-	var chef_data;
 	
 	
-	if( chef_id > 0 ){
+	
+	if( chef_id > 0 ){ // load main chef details 
 		
 		var jsonData = JSON.parse(localStorage.getItem('nearbyChefs'));
 		for (var i = 0; i < jsonData.length; i++) {
@@ -298,41 +574,15 @@ $(document).ready(function(e) {
 	
 	$('#spReview a').on('click',function(){
 		
-		/*
-		var fbLoginSuccess = function (userData) {
-			console.log("UserInfo: ", userData);
-			facebookConnectPlugin.getLoginStatus(function onLoginStatus (status) {
-				console.log("current status: ", status);
-				facebookConnectPlugin.showDialog({
-					method: "share"
-					}, function onShareSuccess (result) {
-						console.log("Posted. ", result);
-				});
-			});
-		};
-		
-		
-		//facebookConnectPlugin.login( ['publish_actions'], fbLoginSuccess, fb_failure);
-		
-		var fShare = {
-			method: "share",
-			href: "http://www.playbuzz.com/samchung10/match-the-food-drink-with-their-nationality",
-			caption: "Match The Food/ Drink With Their Nationality",
-			description: "Basically what the title says. Give it a shot! I accept requests.",
-			picture: 'http://greatwesternfoods.net/images/slideshow/01.jpg'
-		};
-		try{
-			facebookConnectPlugin.showDialog( fShare, fb_success, fb_failure);
-		}catch(exception){
-			alert(exception);	
-		}
-		*/
-		
-		//facebook.request( "me/feed", "POST" { message="Hello Facebook" } );
-		
 		getReviews(chef_id);
 		$('#popReviews').modal();
 	});
+	
+	$('#datetimepickerD').datetimepicker({
+		inline: true,
+		sideBySide: false,
+		format: 'YYYY-MM-DD'
+	});	
 	
 	
 	$('#datetimepicker12').datetimepicker({
@@ -358,11 +608,29 @@ $(document).ready(function(e) {
 			$('#d_time').append('<option value="'+ mm.format('HH:mm:ss') +'">'+ mm.format('hh:00 A')  +'</option>');
 			st++;
 		}
+	});
+	
+	$('#datetimepickerD').on('dp.change', function(m) {
+		var sd = m.date.format("YYYY-MM-DD");
+		thisDate = sd;
+		console.log( DishAvO2[sd] );
+		$('#d_time2').find("option:gt(0)").remove();
 		
+		var st = parseInt(moment(DishAvO2[sd].start_time,'HH:mm:ss').format('H'));
+		var en = parseInt(moment(DishAvO2[sd].end_time,'HH:mm:ss').format('H'));
+		
+		if( en == 0 ){ en = 24; }  
+				
+		while( st < en ){
+			mm = moment(st,'H');
+			$('#d_time2').append('<option value="'+ mm.format('HH:mm:ss') +'">'+ mm.format('hh:00 A')  +'</option>');
+			st+=2;
+		}
 	});
 	
 	
 	loadDishes(chef_id);
+	
 	
 	$('#btnStartOrder').on('click',function(){
 		
@@ -418,6 +686,57 @@ $(document).ready(function(e) {
 		
 	});
 	
+	
+	
+	$('#btnStartDeliveryOrder').on('click',function(){
+		
+		//$('#popDeliveryOrder2').modal();
+		
+		if( empty(localStorage.getItem('userId'))){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> Error');
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Pleaselogin+' <a href="register.html?ret='+chef_id+'">'+cLan.HERE+'</a> '+cLan.tologinregister+'</p>');
+			BAlert.modal();
+			return false;
+		}
+		
+		var user_profile_complete = false;
+		if( !empty(localStorage.getItem('userData'))){
+			var userData = JSON.parse(localStorage.getItem('userData'));
+			if( !empty(userData.first_name) && !empty(userData.last_name) && !empty(userData.phone)  ){
+				user_profile_complete = true;	
+			}
+		}
+		if( user_profile_complete == false ){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Pleasetap+' <a href="user-profile.html?ret='+chef_id+'">'+cLan.HERE+'</a> '+cLan.tocompleteprofile+'</p>');
+			BAlert.modal();
+			return false;
+		}
+		
+		
+		$('#popDeliveryOrder').modal();
+		
+		setTimeout( function() {
+    		initMap();
+		}, 500);
+		
+	});
+	
+	
+$(".modal-fullscreen").on('show.bs.modal', function () {
+  setTimeout( function() {
+    $(".modal-backdrop").addClass("modal-backdrop-fullscreen");
+  }, 0);
+});
+$(".modal-fullscreen").on('hidden.bs.modal', function () {
+  $(".modal-backdrop").addClass("modal-backdrop-fullscreen");
+});
+	
+	
+	
+	
+	
+	
 	$('#btnNext').on('click',function(){
 		if( empty(thisDate) || empty($('#d_time').val()) ){
 			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
@@ -456,15 +775,62 @@ $(document).ready(function(e) {
 		}
 	});
 	
+	
+	
+	$('#btnNextD').on('click',function(){
+		if( !$('#frmReserve2').valid() ) return false;
+		
+		if( empty(thisDate) || empty($('#d_time2').val()) ){
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Pleasepickdatetime+'</p>');
+			BAlert.modal();
+		}else{
+			formData = 'chef_id='+chef_id+'&d_date='+thisDate+'&d_time='+$('#d_time2').val();
+			$.ajax({
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=checkDeliveryAvailable", data: formData,
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					
+					$('#spAvDishes2 ul').empty();
+					for (var i = 0; i < dishData.length; i++) {
+						if(  dishData[i].availability >= 2 ){
+							$('#spAvDishes2 ul').append('<li class="list-group-item">'+
+								'<input type="checkbox" data-price="'+dishData[i].price+'" data-name="'+dishData[i].dish_name+'" value="'+dishData[i].id+'"> '+dishData[i].dish_name+
+								'<div class="spDishD">'+cLan.Price+' : $'+dishData[i].price+ ' &nbsp; '+cLan.Qty+' : <input id="aQty'+dishData[i].id+'" type="number" value="1" class="input-sm inline" /></div></li>');
+						} 
+					}
+					$('#StepD1').hide(); $('#btnNextD').hide();	
+					$('#StepD2').show(500); $('#btnOrderD').show(500);
+					
+				} else { 
+					ErrorModalWithParm(data);
+				}
+				//if (data.JS) { eval(data.JS); }
+			}); // ajax	
+			
+		}
+	});
+	
+	
 	$('#spAvDishes').on('change', 'input',function(){
 		if( $(this).is(':checked')){
 			$(this).parent('li').find('.spDishD').show(200);
-			//$('#aDish'+$(this).val()+' .spDishD').show(200);
 		}else{
-			//$('#aDish'+$(this).val()+' .spDishD').hide();	
 			$(this).parent('li').find('.spDishD').hide(150);	
 		}
 		getTotal();
+	});
+	
+	$('#spAvDishes2').on('change', 'input',function(){
+		if( $(this).is(':checked')){
+			$(this).parent('li').find('.spDishD').show(200);
+		}else{
+			$(this).parent('li').find('.spDishD').hide(150);	
+		}
+		getTotal2();
 	});
 	
 	/*
@@ -477,6 +843,10 @@ $(document).ready(function(e) {
 	
 	$('#btnOrder').on('click',function(){
 		$('#frmReserve').submit();
+	});
+	
+	$('#btnOrderD').on('click',function(){
+		$('#frmReserve2').submit();
 	});
 	
 	$('#frmReserve').validate({
@@ -535,6 +905,71 @@ $(document).ready(function(e) {
 		}// submit handler
 	});
 	
+	$('#frmReserve2').validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+			console.log('#frmReserve2');
+			var dishes = [];
+			Total = 0
+			var delivery_charges = parseFloat($('#delivery_charges').val());
+			$('#spAvDishes2 [type=checkbox]').each(function(index, element) {
+				if($(this).is(':checked')){
+					qty = $('#aQty'+$(this).val()).val();
+					dishes.push( {'id':$(this).val(), 'name': $(this).data('name'), 'qty':qty,'price': $(this).data('price') } ); 
+					Total = Total + parseFloat($(this).data('price')) * parseFloat(qty); 
+				}	
+			});
+			
+			var orderType = 'Delivery';
+			
+			if( Total == 0 ){
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+				BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.electdish+'</p>');
+				BAlert.modal();
+				return false;
+			}
+			
+			Total = Total + delivery_charges;
+			
+			Total = Total.toFixed(2);
+			formData = {'chef_id': chef_id, 'date' : thisDate, 'time': $('#d_time2').val(), 'total': Total, 'dishes': dishes, 
+							'orderType' : orderType, 'delivery_charges': delivery_charges, 'address': $('#d_address').val(),
+							'lat':localStorage.getItem('Deliverylat'), 'lng':localStorage.getItem('Deliverylng')
+							 };
+			console.log(formData);
+			formData = 'jsonData='+JSON.stringify(formData);
+			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+			
+			
+			$.ajax({
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=Reserve2", data: formData,
+				beforeSend: function() { waitingDialog.show( cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					/**///=========== PayPal ===========
+					try{
+						if(empty(OrderId)){
+							OrderId = data.ResId ;
+							ppApp.Amount = Total;
+							ppApp.Description = 'Fudi Reservation '+data.ResId;
+							ppApp.initialize();
+						}
+					} catch (err) {
+						alert(err);
+					}
+					/**///=========== /PayPal ==========
+				} else { 
+					ErrorModalWithParm(data);
+				}
+				if (data.JS) { eval(data.JS); }
+			
+			}); // ajax	
+		
+		}// submit handler
+	});
+	
 });
 
 function fb_success(){
@@ -551,7 +986,21 @@ function getTotal(){
 			Total = Total + $(this).data('price') * $('#aQty'+$(this).val()).val(); 
 		}	
 	});
-	$('#d_total').html('Total : $'+Total.toFixed(2));
+	$('#d_total').html('$'+Total.toFixed(2));
+}
+function getTotal2(){
+	var Total = 0.0;
+	$('#spAvDishes2 [type=checkbox]').each(function(index, element) {
+		if($(this).is(':checked')){
+			Total = Total + $(this).data('price') * $('#aQty'+$(this).val()).val(); 
+		}	
+	});
+	if( Total > 0 ){
+		Total = Total + parseFloat($('#delivery_charges').val());
+		$('#d_total2').html('$'+Total.toFixed(2));
+	}else{
+		$('#d_total2').html('$0.00');
+	}	
 }
 
 
@@ -589,6 +1038,83 @@ function getReviews(chef_id){
 		if (data.JS) { eval(data.JS); }
 		
 	}); // ajax	
+}
+var chefDeliverySettings = null;
+
+function get_chefDeliverySettings(){ // cloned from loadDishes
+	
+	
+	
+	formData = 'chef_id='+chef_id;
+	$.ajax({
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=chefDeliverySettings", data: formData,
+		beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+		complete: function() { waitingDialog.hide(); },
+	}).fail(  ajaxError )
+	.done(function(data){
+		if (data.Success == 'true') {
+			
+			var Dss = distance(localStorage.getItem('Deliverylat'), localStorage.getItem('Deliverylng'), chef_data.lat, chef_data.lng, 'M');
+			console.log(Dss);
+			if( Dss > data.delivery_radious ){
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+				BAlert.find('.modal-body').html('<p class="text-danger">Your address is outside of the chef\'s delivery range</p>');
+				BAlert.modal();
+				return false;
+			}
+			if(!empty(data.delivery_charges)){
+				var dchg = parseFloat(data.delivery_charges);
+				$('#d_charges').html('$' + dchg.toFixed(2) );
+				$('#delivery_charges').val(dchg.toFixed(2));
+			}else{
+				$('#d_charges').html('$0.00');
+				$('#delivery_charges').val('0');
+			}
+			
+			var enabledDates = [];
+			DishAv2 = data.DishAv;
+			var defDate = null;
+			if( !empty(DishAv2)){
+				for (var i = 0; i < DishAv2.length; i++) {
+					mo = moment(DishAv2[i].cal_date, 'YYYY-MM-DD');
+					if( mo.isAfter(moment()) || mo.isSame(moment(),'day')  ){
+						if(empty(defDate)){ defDate = DishAv2[i].cal_date };
+						enabledDates.push(DishAv2[i].cal_date);
+						DishAvO2[DishAv2[i].cal_date] = { 'date': DishAv2[i].cal_date, 'start_time': DishAv2[i].start_time, 'end_time': DishAv2[i].end_time };
+					}
+				}
+			}
+			if(empty(enabledDates)){
+				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+				BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.Thischefnotavailable+'</p>');
+				BAlert.modal();
+				return false;
+				
+			}else{
+				$('#datetimepickerD').data("DateTimePicker").enabledDates(enabledDates);
+				$('#datetimepickerD').data("DateTimePicker").defaultDate( defDate );
+			}
+		
+			
+			
+			
+			setTimeout(function(){ 
+				$('#popDeliveryOrder2').modal();
+				$('#StepD1').show(); $('#btnNextD').show();
+				$('#StepD2').hide(); $('#btnOrderD').hide();
+			}, 500);
+			
+			
+			
+			
+		}else { 
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+			BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+			BAlert.modal();
+		}
+		if (data.JS) { eval(data.JS); }
+		
+	}); // ajax		
 }
 
 
@@ -628,6 +1154,7 @@ function loadDishes(chef_id){
 					$copy.appendTo('#chef-foods');
 				}
 				$('#btnStartOrder').removeClass('disabled');
+				$('#btnStartDeliveryOrder').removeClass('disabled');
 			}else{
 				$('#chef-foods').html('<center>No Dishes Found</center>');
 			}
@@ -639,6 +1166,21 @@ function loadDishes(chef_id){
 		if (data.JS) { eval(data.JS); }
 		
 	}); // ajax	
+}
+
+//https://www.geodatasource.com/developers/javascript
+function distance(lat1, lon1, lat2, lon2, unit) {
+	var radlat1 = Math.PI * lat1/180
+	var radlat2 = Math.PI * lat2/180
+	var theta = lon1-lon2
+	var radtheta = Math.PI * theta/180
+	var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+	dist = Math.acos(dist)
+	dist = dist * 180/Math.PI
+	dist = dist * 60 * 1.1515
+	if (unit=="K") { dist = dist * 1.609344 }
+	if (unit=="N") { dist = dist * 0.8684 }
+	return dist
 }
 
 var ppApp = {
@@ -654,7 +1196,8 @@ var ppApp = {
 		//alert('initPaymentUI');
 		var clientIDs = {
 			"PayPalEnvironmentProduction": "Abd6gqI-wgpVBdCHvBhYEuJZZtFL7ybnizVC0eOyVnBTWc--CyUf7dE44ZsVkF4pZdz6SkO2GAg4sf1c",
-			"PayPalEnvironmentSandbox": ""
+			"PayPalEnvironmentSandbox": "AV5JRlY4ZpMXj2_aizYv-IiAbgcJhassrlQvOftz4246yfDgMSlPwE4JkBs3O6vaCeTvyGAufbQjcg3N"
+			//"PayPalEnvironmentSandbox": ""
 		};
 		try {
 			PayPalMobile.init(clientIDs, ppApp.onPayPalMobileInit);

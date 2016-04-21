@@ -30,6 +30,7 @@
 			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.DeliverySchedule" href="delivery-schedule.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
 			
 			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
@@ -96,12 +97,15 @@
 					</div>
 					
 					<div class="form-group">
-						<label data-bind="text: lang.Status"></label>
+						<label data-bind="text: lang.Availability"></label>
 						<div class="">
-							<input type="radio" name="status" value="1" />
-							<span data-bind="text: lang.Active"></span> &nbsp;
-							<input type="radio" name="status" value="0" checked />
-							<span data-bind="text: lang.Inactive"></span> </div>
+							<select name="availability" id="availabilityA">
+								<option value="0" data-bind="text: lang.DishA0"></option>
+								<option value="1" data-bind="text: lang.DishA1"></option>
+								<option value="2" data-bind="text: lang.DishA2"></option>
+								<option value="3" data-bind="text: lang.DishA3"></option>
+							</select>
+						</div>
 					</div>
 					<input type="hidden" id="chef_id" name="chef_id">
 					<input type="hidden" id="dish_id" name="dish_id">
@@ -153,7 +157,9 @@ $(document).ready(function(e) {
 		//$('#servingA').val(thisDish.serving);
 		$('#image1A').val(thisDish.image1);
 		$('#image2A').val(thisDish.image2);
-		$("input[name=status][value="+thisDish.status+"]").prop('checked', true);
+		//$("input[name=status][value="+thisDish.status+"]").prop('checked', true);
+		$('#availabilityA').val(thisDish.availability);
+		
 		if(!empty(thisDish.image1)){
 			$('#pimage').prop('src','http://mobileapi.foodiesys.com/foodie-mssql/pics/'+thisDish.image1);
 		}else{
@@ -174,6 +180,7 @@ $(document).ready(function(e) {
 		$('#image2A').val('');
 		$('#dish_id').val('');
 		$('#popAdd').modal();
+		$('#availabilityA').val('3');
 		$('#pimage').prop('src','images/no-pic2.jpg');
 	});
 	
@@ -235,8 +242,17 @@ function loadDishes(chef_id){
 					$copy.find('a.dishTitle').html(dishData[i].dish_name);
 					$copy.find('a.dishTitle').prop('rel', dishData[i].id );
 					$copy.find('.btnEdit').prop('data-dish', dishData[i].id );
-					var stat = (dishData[i].status ==0)?cLan.Inactive:cLan.Active;
-					$copy.find('p.dishInfo').html(cLan.Price+' : $'+dishData[i].price+' <br />'+cLan.Status+' : <strong>'+stat+'</strong>');
+					var stat = ''; //= (dishData[i].status ==0)?cLan.Inactive:cLan.Active;
+							
+					switch(dishData[i].availability){
+						case '0':	stat = cLan.DishA0; break;
+						case '1':	stat = cLan.DishA1; break;
+						case '2':	stat = cLan.DishA2; break;
+						case '3':	stat = cLan.DishA3; break;
+						default:		stat = 'N/A';
+					}
+					
+					$copy.find('p.dishInfo').html(cLan.Price+' : $'+dishData[i].price+' <br />'+cLan.Availability+' : <strong>'+stat+'</strong>');
 					
 					obRat = ratingCal( dishData[i].rating_sum, dishData[i].rating_count );
 					

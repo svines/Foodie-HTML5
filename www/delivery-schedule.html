@@ -60,12 +60,30 @@
 </div>
 <div id="user-profile-page" class="content">
 	<h1 id="menu-button"> <a id="menu-toggle" href="#" class="btn-menu toggle"> <i class="fa fa-bars"></i> </a>
-	<p class="pageTitle" style="font-size:24px" data-bind="text: lang.SoA"></p>
+	<p class="pageTitle" style="font-size:24px" data-bind="text: lang.DeliverySchedule"></p>
 	</h1>
 	<div id="topAlert" style="display:none" class="alert alert-warning"><i class="fa fa-warning"></i> <span data-bind="text: lang.FSP"></span></div>
 	
 	<form id="user-form">
-		<p data-bind="text: lang.Clickdates"></p>
+		<div class="form-group">
+			<label data-bind="text: lang.DeliveryLimit"></label>
+			<input class="form-control required" type="number" name="delivery_limit" id="delivery_limit" value="" />
+		</div>	
+		<div class="form-group">
+			<label data-bind="text: lang.Deliveryradius"></label>
+			<input class="form-control required" type="number" name="delivery_radious" id="delivery_radious" value="" />
+		</div>
+		<div class="checkbox">
+			<label>
+			<input type="checkbox" name="delivery_outside" id="delivery_outside" value="1" /> <span data-bind="text: lang.deliveroutside"></span></label>
+		</div>	
+		<div class="form-group">
+			<label data-bind="text: lang.Deliverycharges"></label>
+			<input class="form-control required" type="number" min="0" name="delivery_charges" id="delivery_charges" value="" />
+		</div>	
+						
+	
+		<p data-bind="text: lang.DelivaryCalCap"></p>
 		<div class="aLoading text-center"><img src="images/loading.gif" sytle=" margin: 0 auto;" /></div>
 		<div id="sp_loaded" style="display:none">
 			<div style="overflow:hidden;">
@@ -167,8 +185,7 @@
 					</div>	
 					
 					
-					<strong data-bind="text: lang.Dishes"></strong> &nbsp; <a id="aSelAll" class="btn btn-link btn-sm" href="#" data-bind="text: lang.SelectAll" ></a><br />
-					<div class="form-group" id="sp_dishes"></div>
+					
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -224,8 +241,8 @@ $(document).ready(function(e) {
 		if(!empty(DishAvO[thisDate])){
 			$('#start_time').val( DishAvO[thisDate].start_time );
 			$('#end_time').val( DishAvO[thisDate].end_time );
+			/*
 			$('#sp_dishes input:checkbox').prop('checked',false);
-			
 			var ArD = DishAvO[thisDate].dishes.split(',');
 			if( ArD.length > 0 ){
 				for(i=0; i<ArD.length; i++){
@@ -234,6 +251,7 @@ $(document).ready(function(e) {
 					}
 				}	
 			}
+			*/
 		}else{
 			$('#sp_dishes input').prop('checked',true);	
 		}
@@ -246,7 +264,7 @@ $(document).ready(function(e) {
 	});
 	
 	
-	loadDishes();
+	loadPageData();
 	
 	//$('#popLoc').modal();
 	/*
@@ -294,13 +312,7 @@ $(document).ready(function(e) {
 	});
 	
 	$('#btnAdd').on('click',function(){
-		if($('#sp_dishes input:checked').length > 0){
-			$('#frmReserve').submit();
-		}else{
-			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
-			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.PSelectD+'</p>');
-			BAlert.modal();
-		}
+		$('#frmReserve').submit();
 	});
 	
 	$('#frmReserve').validate({
@@ -329,7 +341,7 @@ $(document).ready(function(e) {
 			tStt = $('#start_time').val();
 			tEnt = $('#end_time').val();
 			
-			DishAvO[thisDate] = { 'date': thisDate, 'start_time': tStt, 'end_time': tEnt, 'dishes': DishIds };
+			DishAvO[thisDate] = { 'date': thisDate, 'start_time': tStt, 'end_time': tEnt };
 			
 			if( $('#check_all_days').is(':checked')  ){ // Set to All same days 
 				$('#check_all_days').prop('checked', false );
@@ -339,7 +351,7 @@ $(document).ready(function(e) {
 					mo.add(1, 'day');
 					if( mo.format('E') == dy ){
 						tDat = mo.format('YYYY-MM-DD');
-						DishAvO[tDat] =  { 'date': tDat, 'start_time': tStt, 'end_time': tEnt, 'dishes': DishIds };
+						DishAvO[tDat] =  { 'date': tDat, 'start_time': tStt, 'end_time': tEnt };
 					}
 				}
 			}
@@ -353,38 +365,48 @@ $(document).ready(function(e) {
 	
 	$('#btn-submit').on('click',function(){
 		
-		jData = [];
-		$.each( DishAvO , function(key, value){
-			if(empty(value)) return;
-			jData.push( value );
-		});
-		
-		formData = 'jsonData='+JSON.stringify(jData);
-		formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
-		//console.log(formData);
-		$.ajax({
-			type: "POST", dataType: 'json', url: ServerAjax+"?h=saveCal", data: formData,
-			beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
-			complete: function() { waitingDialog.hide(); },
-		}).fail(  ajaxError )
-		.done(function(data){
-			if (data.Success == 'true') {
-				
-				BAlert.find('.modal-header h3').html('<i class="fa check"></i>'+cLan.Success);
-				BAlert.find('.modal-body').html('<p class="text-success">'+cLan['201']+'</p>');
-				BAlert.modal();
-				//document.location = 'chef-dishes.html';
-				//loadDishes(localStorage.getItem('userId'));
-			} else { 
-				BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
-				BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
-				BAlert.modal();
-			}
-			if (data.JS) { eval(data.JS); }
-		}); // ajax	
-		
+		$("#user-form").submit();
 		
 	});
+	
+	$("#user-form").validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+
+			jData = [];
+			$.each( DishAvO , function(key, value){
+				if(empty(value)) return;
+				jData.push( value );
+			});
+			
+			formData =  $(form).serialize();
+			formData += '&jsonData='+JSON.stringify(jData);
+			formData += '&userId='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); 
+			//console.log(formData);
+			$.ajax({
+				type: "POST", dataType: 'json', url: ServerAjax+"?h=saveDeliveryCal", data: formData,
+				beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+				complete: function() { waitingDialog.hide(); },
+			}).fail(  ajaxError )
+			.done(function(data){
+				if (data.Success == 'true') {
+					
+					BAlert.find('.modal-header h3').html('<i class="fa check"></i>'+cLan.Success);
+					BAlert.find('.modal-body').html('<p class="text-success">'+cLan['201']+'</p>');
+					BAlert.modal();
+					//document.location = 'chef-dishes.html';
+					//loadPageData(localStorage.getItem('userId'));
+				} else { 
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+					BAlert.find('.modal-body').html('<p class="text-danger">'+data.Msg+'</p>');
+					BAlert.modal();
+				}
+				if (data.JS) { eval(data.JS); }
+			}); // ajax	
+
+
+		}// submit handler
+	});	
 	
 	
 });
@@ -404,41 +426,47 @@ function updateCalTbody(){
 }
 
 
-function loadDishes(){
-	formData = 'chef_id='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken')+'&DishAv=1'; 
+function loadPageData(){
+	formData = 'chef_id='+localStorage.getItem('userId')+'&userToken='+localStorage.getItem('userToken'); // < getDishies + delivery schedure 
 	$.ajax({
-		type: "POST", dataType: 'json', url: ServerAjax+"?h=getDishes", data: formData,
+		type: "POST", dataType: 'json', url: ServerAjax+"?h=chefDeliverySettings", data: formData,
 		beforeSend: function() { $('div.aLoading').show();  },
 		complete: function() { $('div.aLoading').hide(); },
 	}).fail(  ajaxError )
 	.done(function(data){
 		if (data.Success == 'true') {
-			if(data.Count > 0 ){
-				dishData = data.Dishes;
+			
+				//dishData = data.Dishes;
 				DishAv = data.DishAv;
-				var H = '';
-				for (var i = 0; i < dishData.length; i++) {
-					H = H + '<div class="checkbox"><label><input type="checkbox" value="'+dishData[i].id+'">'+dishData[i].dish_name + '</label></div>';
+				$('#delivery_limit').val(data.delivery_limit);
+				$('#delivery_charges').val(data.delivery_charges);
+				$('#delivery_radious').val(data.delivery_radious);
+				if(data.delivery_outside == '1'){
+					$('#delivery_outside').prop('checked',true);
+				}else{
+					$('#delivery_outside').prop('checked',false);
 				}
-				$('#sp_dishes').html(H);
 				
+				//var H = '';
+				//for (var i = 0; i < dishData.length; i++) {
+				//	H = H + '<div class="checkbox"><label><input type="checkbox" value="'+dishData[i].id+'">'+dishData[i].dish_name + '</label></div>';
+				//}
+				//$('#sp_dishes').html(H);
+				//console.log( DishAv );
 
 				if( !empty(DishAv)){
 					for (var i = 0; i < DishAv.length; i++) {
 						mo = moment(DishAv[i].cal_date, 'YYYY-MM-DD');
 						if( mo.isAfter(moment()) || mo.isSame(moment(),'day')  ){
 							console.log( i );
-							DishAvO[DishAv[i].cal_date] = { 'date': DishAv[i].cal_date, 'start_time': DishAv[i].start_time, 'end_time': DishAv[i].end_time, 'dishes': DishAv[i].dishes };
+							DishAvO[DishAv[i].cal_date] = { 'date': DishAv[i].cal_date, 'start_time': DishAv[i].start_time, 'end_time': DishAv[i].end_time };
 						}
 					}
 					console.log( DishAvO );
 				}
 				updateCalTbody();
 				
-				
-			}else{
-				$('#chef-sp_dishes').html('<center>'+cLan.NoDishF+'</center>');
-			}
+			
 			$('#sp_loaded').show();
 		}else { 
 			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);

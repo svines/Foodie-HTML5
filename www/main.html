@@ -34,7 +34,7 @@ html, body{ height:100% }
 
 <div id="bottom-bar" style="padding:5px; text-align:center">
 	
-Copyright (c) 2016  Fudi Systems, Inc.
+Copyright (c) 2016  Foodie Systems, Inc.
 	
 </div>	
 </div>
@@ -63,25 +63,30 @@ $(document).ready(function() {
 
 
 function onDeviceReady() {
-	//alert('deviceready..');
-	navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });
+	setTimeout(function(){ 
+		//onShortError({code:-1});
+		navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 3000, timeout: 5000, enableHighAccuracy:true });
+	}, 1000);
 }
 
-var Timeouts = 0;
+var Retries = 0;
 
 function onShortError(error){
 	try{
-		BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> GPS '+cLan.Error );
-		BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.NoGPS+'</p>');
-		BAlert.modal();	
-		
-		if(error.code == 3){
-			Timeouts = Timeouts + 1;
-			if( Timeouts > 3){
-				showPosition(null);
-				return;	
-			}
-			navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 0, timeout: 5000, enableHighAccuracy:true });	
+		//console.log(error);
+		if( Retries > 4){
+			showPosition(null); 
+		}else{
+			Retries = Retries+1;
+			BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> GPS '+cLan.Error+' ('+error.code+')' );
+			BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.NoGPS+'.</p>');
+			BAlert.find('button.btn-primary').html('Retry').on('click',function(){
+				setTimeout(function(){ 
+					//onShortError({code:-1});
+					navigator.geolocation.getCurrentPosition(showPosition, onShortError, { maximumAge: 3000, timeout: 30000, enableHighAccuracy:false });
+				}, 1000);
+			});
+			BAlert.modal();	
 		}
 	}catch(err) {
 		alert(err.message);
@@ -92,7 +97,7 @@ function onShortError(error){
 
 function showPosition(position) {
 	try{
-		if( Timeouts > 3){
+		if( Retries > 4){
 			lat = 26.1644398;
 			lng = -80.1621635;
 		}else{
@@ -104,9 +109,9 @@ function showPosition(position) {
 		localStorage.setItem('lng', lng );
 		
 		if( empty(localStorage.getItem('userId'))){
-			setTimeout(function(){ document.location = 'register.html'; }, 1000);
+			setTimeout(function(){ document.location = 'register.html'; }, 500);
 		}else{
-			setTimeout(function(){ document.location = 'map.html'; }, 1000);	
+			setTimeout(function(){ document.location = 'map.html'; }, 500);	
 		}
 	}catch(err) {
 		alert(err.message);

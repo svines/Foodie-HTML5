@@ -30,6 +30,7 @@
 			<li class="isChef pChef"><a class="sub" data-bind="text: lang.ChefProfile" href="chef-profile-edit.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ManageDishes" href="chef-dishes.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.Schedule" href="chef-calendar-set.html"></a></li>
+			<li class="isChef"><a class="sub" data-bind="text: lang.DeliverySchedule" href="delivery-schedule.html"></a></li>
 			<li class="isChef"><a class="sub" data-bind="text: lang.ChefReservations" href="chef-reservations.html"></a></li>
 			
 			<li><a  href="settings.html" data-bind="text: lang.Settings"></a></li>
@@ -46,7 +47,7 @@
 	</h1>
 	
 	<div class="text-center">
-		<button id="btnClear" class="btn btn-primary"><i class="fa fa-qrcode"></i> &nbsp; <span data-bind="text: lang.ScanQR"></span></button>
+		<button id="btnScan" class="btn btn-primary"><i class="fa fa-qrcode"></i> &nbsp; <span data-bind="text: lang.ScanQR"></span></button>
 	</div>
 	<div id="chef-foods">
 		<div class="food-listing hidden">
@@ -140,9 +141,14 @@ $(document).ready(function(e) {
 		}
 		var H = '<h4>'+cLan.From+',</h4><strong>'+thisOrder.first_name+' '+thisOrder.last_name+'</strong><br />'+thisOrder.email+'<br />'+thisOrder.phone+'<br />';
 		H += '<h4>'+cLan.Detail+' :</h4>';
-		H += cLan.OrderId+' : '+ resData[i].id +' &nbsp; &nbsp; Persons : '+ resData[i].persons +' <br />' ;
+		H += cLan.OrderId+' : '+ thisOrder.id +' &nbsp; &nbsp; ';
+		if(thisOrder.order_type=='Dine'){
+			H += cLan.Persons+' : '+ thisOrder.persons +' <br />' ;
+		}
+		H += cLan.Ordertype+' : '+ thisOrder.order_type +'<br />' ;		
+		
 		H += cLan.Ordertotal+' : $'+ thisOrder.order_total +'<br />' ;
-		H += cLan.Paymentstatus+' : <strong>'+resData[i].status+'</strong><br />';
+		H += cLan.Paymentstatus+' : <strong>'+thisOrder.status+'</strong><br />';
 		
 		var mo = moment( thisOrder.order_date+' '+thisOrder.order_time, 'YYYY-MM-DD HH:mm:ss' );
 		H += cLan.Time+' : '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'<br />';
@@ -282,7 +288,7 @@ function loadReservations(){
 
 					
 					var H = '';
-					
+					H += cLan.Ordertype+' : '+ resData[i].order_type +'<br />' ;
 					H += cLan.Ordertotal+' : $'+ parseFloat(resData[i].order_total).toFixed(2) +'<br />' ;
 					H += cLan.Paymentstatus+' : <strong>'+resData[i].status+'</strong> ';
 					if( resData[i].status == 'Paid' ){
