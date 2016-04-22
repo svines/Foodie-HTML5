@@ -139,25 +139,25 @@ $(document).ready(function(e) {
 				break; 	
 			}
 		}
-		var H = '<h4>'+cLan.From+',</h4><strong>'+thisOrder.first_name+' '+thisOrder.last_name+'</strong><br />'+thisOrder.email+'<br />'+thisOrder.phone+'<br />';
-		H += '<h4>'+cLan.Detail+' :</h4>';
-		H += cLan.OrderId+' : '+ thisOrder.id +' &nbsp; &nbsp; ';
+		var H = '<h4>'+cLan.From+':</h4><strong>'+thisOrder.first_name+' '+thisOrder.last_name+'</strong><br />'+thisOrder.email+'<br />Tel: '+thisOrder.phone+'<br />';
+		H += '<h4>'+cLan.Detail+':</h4>';
+		H += cLan.OrderId+': '+ thisOrder.id +' &nbsp; &nbsp; ';
 		if(thisOrder.order_type=='Dine'){
-			H += cLan.Persons+' : '+ thisOrder.persons +' <br />' ;
+			H += cLan.Persons+': '+ thisOrder.persons +' <br />' ;
 		}
-		H += cLan.Ordertype+' : '+ thisOrder.order_type +'<br />' ;		
+		H += cLan.Ordertype+': '+ thisOrder.order_type +'<br />' ;		
 		
-		H += cLan.Ordertotal+' : $'+ thisOrder.order_total +'<br />' ;
-		H += cLan.Paymentstatus+' : <strong>'+thisOrder.status+'</strong><br />';
+		H += cLan.Ordertotal+': $'+ thisOrder.order_total +'<br />' ;
+		H += cLan.Paymentstatus+': <strong>'+thisOrder.status+'</strong><br />';
 		
 		var mo = moment( thisOrder.order_date+' '+thisOrder.order_time, 'YYYY-MM-DD HH:mm:ss' );
-		H += cLan.Time+' : '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'<br />';
-		H += '<h4>'+cLan.Dishes+' :</h4><table class="table table-responsive">';
+		H += cLan.Time+': '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('h:mma') +'<br />';
+		H += '<h4>'+cLan.Dishes+':</h4><table class="table table-responsive">';
 		H += '<tr><th>#</th><th>'+cLan.Dish+'</th><th>'+cLan.Qty+'</th><th>'+cLan.Price+'</th></tr>';
 		var T = 0;
 		for (var i = 0; i < thisOrder.dishes.length; i++) {
 			T = T + parseFloat(thisOrder.dishes[i].qty) * parseFloat(thisOrder.dishes[i].price);
-			H += '<tr><td>'+(i+1)+'</td><td>'+thisOrder.dishes[i].dish_name+'</td><td>'+thisOrder.dishes[i].qty+'</td><td>$'+thisOrder.dishes[i].price+'</td></tr>';	
+			H += '<tr><td>'+(i+1)+'</td><td>'+thisOrder.dishes[i].dish_name+'</td><td>'+thisOrder.dishes[i].qty+'</td><td>$'+parseFloat(thisOrder.dishes[i].price).toFixed(2)+'</td></tr>';	
 		}
 		H += '<tr><td></td><td></td><td><strong>'+cLan.TOTAL+'</strong></td><td><strong>$'+T.toFixed(2)+'</strong></td></tr>';	
 		H += '</table>';
@@ -262,7 +262,7 @@ function QRonSuccess(result){
 }
 function QRFailure(message){
 	BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
-	BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.UnableQR+' : '+message+'</p>');
+	BAlert.find('.modal-body').html('<p class="text-danger">'+cLan.UnableQR+': '+message+'</p>');
 	BAlert.modal();	
 }
 
@@ -288,15 +288,15 @@ function loadReservations(){
 
 					
 					var H = '';
-					H += cLan.Ordertype+' : '+ resData[i].order_type +'<br />' ;
-					H += cLan.Ordertotal+' : $'+ parseFloat(resData[i].order_total).toFixed(2) +'<br />' ;
-					H += cLan.Paymentstatus+' : <strong>'+resData[i].status+'</strong> ';
+					H += cLan.Ordertype+': '+ resData[i].order_type +'<br />' ;
+					H += cLan.Ordertotal+': $'+ parseFloat(resData[i].order_total).toFixed(2) +'<br />' ;
+					H += cLan.Paymentstatus+': <strong>'+resData[i].status+'</strong> ';
 					if( resData[i].status == 'Paid' ){
-						H += '<button class="btn btn-xs btnFinish pull-right" data-rid="'+resData[i].id+'"><i class="fa fa-check"></i> '+cLan.FinishOrder+' </button>';
+						H += '<button class="btn btn-sm btnFinish pull-right" data-rid="'+resData[i].id+'"><i class="fa fa-check"></i> '+cLan.FinishOrder+' </button>';
 					}
 					
 					var mo = moment( resData[i].order_date+' '+resData[i].order_time, 'YYYY-MM-DD HH:mm:ss' );
-					//H += '<h4>Time : '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'</h4>';
+					//H += '<h4>Time: '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'</h4>';
 					H += '<h4>'+cLan.Time+': '+ mo.format('MMM D, YYYY (ddd) [at] h:mma') +'</h4>';
 					
 					$copy.find('p.dishInfo').html( H );

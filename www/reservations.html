@@ -143,7 +143,8 @@
 </div>
 
 <!-- Script -->
-<script type="text/javascript" src="cordova.js"></script>  
+<script type="text/javascript" src="cordova.js"></script> 
+<script type="text/javascript" src="js/paypal-mobile-js-helper.js"></script>
 <script src="js/jquery-1.11.3.min.js"></script> 
 <script src="js/bootstrap.min.js"></script> 
 <script src="js/jquery.validate.min.js"></script>
@@ -158,6 +159,7 @@
 
 
 var resData;
+var OrderId;
 
 $(document).ready(function(e) {
 
@@ -172,7 +174,7 @@ $(document).ready(function(e) {
 	
 	$('#chef-foods').on('click', '.btnQR',function(){
 		BAlert.find('.modal-header h3').html('<i class="fa check"></i> '+cLan.QRCode);
-		BAlert.find('.modal-body').html('').qrcode({ text : $(this).data('qr') });
+		BAlert.find('.modal-body').html('').qrcode({ text: $(this).data('qr') });
 		BAlert.modal();
 	});
 	
@@ -194,24 +196,28 @@ $(document).ready(function(e) {
 				break; 	
 			}
 		}
-		var H = '<h4>'+cLan.To+',</h4><strong>'+thisOrder.company+'</strong><br />'+thisOrder.address+'<br />'+thisOrder.city+' '+thisOrder.state+', '+thisOrder.zip+'<br />'+thisOrder.phone+'<br />';
-		H += '<h4>'+cLan.Detail+' :</h4>';
-		H += cLan.OrderId+' : '+ thisOrder.id +' &nbsp; &nbsp; ';
+		var H = '<h4>'+cLan.To+':</h4><strong>'+thisOrder.company+'</strong><br />'+thisOrder.address+'<br />'+thisOrder.city+' '+thisOrder.state+', '+thisOrder.zip+'<br />Tel: '+thisOrder.phone+'<br />';
+		H += '<h4>'+cLan.Detail+':</h4>';
+		H += cLan.OrderId+': '+ thisOrder.id +' &nbsp; &nbsp; ';
 		if(thisOrder.order_type=='Dine'){
-			H += cLan.Persons+' : '+ thisOrder.persons +' <br />' ;
+			H += cLan.Persons+': '+ thisOrder.persons +' <br />' ;
 		}
-		H += cLan.Ordertype+' : '+ thisOrder.order_type +'<br />' ;		
-		H += cLan.Ordertotal+' : $'+ thisOrder.order_total +'<br />' ;
-		H += cLan.Paymentstatus+' : <strong>'+thisOrder.status+'</strong><br />';
+		H += cLan.Ordertype+': '+ thisOrder.order_type +'<br />' ;		
+		H += cLan.Ordertotal+': $'+ thisOrder.order_total +'<br />' ;
+		
+		//if( thisOrder.status == 'Pending' ){
+		//	H += '<button class="btn btn-sm pendingPay pull-right btn-primary" data-id="'+thisOrder.id+'" data-total="'+parseFloat(thisOrder.order_total).toFixed(2)+'"><i class="fa fa-paypal"></i> '+cLan.Paynow+' </button>';
+		//}
+		H += cLan.Paymentstatus+': <strong>'+thisOrder.status+'</strong><br />';
 		
 		var mo = moment( thisOrder.order_date+' '+thisOrder.order_time, 'YYYY-MM-DD HH:mm:ss' );
-		H += cLan.Time+' : '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('HH:mm A') +'<br />';
-		H += '<h4>'+cLan.Dishes+' :</h4><table class="table table-responsive">';
+		H += cLan.Time+': '+ mo.format('MM/DD/YYYY') +' &nbsp; '+ mo.format('h:mma') +'<br />';
+		H += '<h4>'+cLan.Dishes+':</h4><table class="table table-responsive">';
 		H += '<tr><th>#</th><th>'+cLan.Dish+'</th><th>'+cLan.Qty+'</th><th>'+cLan.Price+'</th></tr>';
 		var T = 0;
 		for (var i = 0; i < thisOrder.dishes.length; i++) {
 			T = T + parseFloat(thisOrder.dishes[i].qty) * parseFloat(thisOrder.dishes[i].price);
-			H += '<tr><td>'+(i+1)+'</td><td>'+thisOrder.dishes[i].dish_name+'</td><td>'+thisOrder.dishes[i].qty+'</td><td>$'+thisOrder.dishes[i].price+'</td></tr>';	
+			H += '<tr><td>'+(i+1)+'</td><td>'+thisOrder.dishes[i].dish_name+'</td><td>'+thisOrder.dishes[i].qty+'</td><td>$'+parseFloat(thisOrder.dishes[i].price).toFixed(2)+'</td></tr>';	
 		}
 		H += '<tr><td></td><td></td><td><strong>'+cLan.TOTAL+'</strong></td><td><strong>$'+T.toFixed(2)+'</strong></td></tr>';	
 		H += '</table>';
@@ -220,7 +226,7 @@ $(document).ready(function(e) {
 		$('#popUser').modal();
 	});
 	
-
+	
 	
 	
 	$('#frmF').validate({
@@ -317,23 +323,23 @@ function loadReservations(){
 					$copy.find('h4.dishTitle').html( resData[i].company );
 					//$copy.find('a.dishTitle').prop('rel', resData[i].id );
 					//$copy.find('.btnReserve').prop('data-dish', resData[i].id );
-					//$copy.find('div.byChef').html( 'Persons : <a href="chef_profile.html?id='+resData[i].chef_id+'">' + resData[i].company + '</a>' );
-					$copy.find('div.byChef').html( cLan.Persons+' : '+resData[i].persons  );
+					//$copy.find('div.byChef').html( 'Persons: <a href="chef_profile.html?id='+resData[i].chef_id+'">' + resData[i].company + '</a>' );
+					$copy.find('div.byChef').html( cLan.Persons+': '+resData[i].persons  );
 					$copy.find('div.byChef').html( '<button class="btn btn-default btn-sm btnDetail" data-id="'+resData[i].id+'">'+cLan.OrderDetails+'</button>'  );
 					
 					var H = '';
-					H += cLan.Ordertype+' : '+ resData[i].order_type +'<br />' ;
-					H += cLan.Ordertotal+' : $'+ parseFloat(resData[i].order_total).toFixed(2) +'<br />' ;
-					H += cLan.Paymentstatus+' : <strong>'+resData[i].status+'</strong>';
+					H += cLan.Ordertype+': '+ resData[i].order_type +'<br />' ;
+					H += cLan.Ordertotal+': $'+ parseFloat(resData[i].order_total).toFixed(2) +'<br />' ;
+					H += cLan.Paymentstatus+': <strong>'+resData[i].status+'</strong>';
 					if( resData[i].status == 'Paid' ){
-						H += '<br/>'+cLan.ConfirmationCode+' : <strong>'+resData[i].delivary_code+'</strong>';	
-						H += ' &nbsp; <button class="btn btn-xs btnQR pull-right" data-qr="F'+resData[i].id+':'+resData[i].delivary_code+'"><i class="fa fa-qrcode"></i> &nbsp; '+cLan.QRCode+' </button>';
+						H += '<br/>'+cLan.ConfirmationCode+': <strong>'+resData[i].delivary_code+'</strong>';	
+						H += ' &nbsp; <button class="btn btn-sm btnQR pull-right" data-qr="F'+resData[i].id+':'+resData[i].delivary_code+'"><i class="fa fa-qrcode"></i> &nbsp; '+cLan.QRCode+' </button>';
 					}
 					var M9 =  moment(resData[i].order_date , 'YYYY-MM-DD' ).add(90, 'days'); 
 					if( resData[i].status == 'Completed' && moment().isBefore(M9)  ){
-						H += ' &nbsp; <button class="btn btn-xs btnFinish" data-rid="'+resData[i].id+'"><i class="fa fa-comment"></i> '+cLan.Rateit+' </button>';
+						H += ' &nbsp; <button class="btn btn-sm btnFinish" data-rid="'+resData[i].id+'"><i class="fa fa-comment"></i> '+cLan.Rateit+' </button>';
 					}
-					//H += ' &nbsp; <button class="btn btn-xs btnFinish" data-rid="'+resData[i].id+'"><i class="fa fa-comment"></i> Rate it </button>';
+					//H += ' &nbsp; <button class="btn btn-sm btnFinish" data-rid="'+resData[i].id+'"><i class="fa fa-comment"></i> Rate it </button>';
 					var mo = moment( resData[i].order_date+' '+resData[i].order_time, 'YYYY-MM-DD HH:mm:ss' );
 					H += '<h4>'+cLan.Time+': '+ mo.format('MMM D, YYYY (ddd) [at] h:mma') +'</h4>';
 					
@@ -356,6 +362,8 @@ function loadReservations(){
 	
 	}); // ajax	
 }
+
+
 
 </script>
 </body>

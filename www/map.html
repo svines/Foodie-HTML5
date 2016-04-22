@@ -307,7 +307,7 @@ $(document).ready(function(e) {
 function DineControl(controlDiv, map) { // center 
 	// Set CSS for the control border.
 	var controlUI = document.createElement('div');
-	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.backgroundColor = '#efefef';
 	controlUI.style.borderRadius = '2px';
 	controlUI.style.boxShadow = '0 2px 2px rgba(0,0,0,.3)';
 	controlUI.style.cursor = 'pointer';
@@ -320,9 +320,9 @@ function DineControl(controlDiv, map) { // center
 	
 	// Set CSS for the control interior.
 	var controlText = document.createElement('div');
-	controlText.style.color = '#FFFFFF';
-	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-	controlText.style.fontSize = '16px';
+	/*controlText.style.color = '#FFFFFF';
+	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';*/
+	controlText.style.fontSize = '18px';
 	controlText.style.lineHeight = '30px';
 	controlText.style.paddingLeft = '8px';
 	controlText.style.paddingRight = '8px';
@@ -347,12 +347,12 @@ function DineControl(controlDiv, map) { // center
 function DeliveryControl(controlDiv, map) { // center 
 	// Set CSS for the control border.
 	var controlUI = document.createElement('div');
-	controlUI.style.backgroundColor = '#3e3e3e';
+	controlUI.style.backgroundColor = '#efefef';
 	controlUI.style.borderRadius = '2px';
 	controlUI.style.boxShadow = '0 2px 2px rgba(0,0,0,.3)';
 	controlUI.style.cursor = 'pointer';
 	controlUI.style.marginTop = '6px';
-	controlUI.style.marginLeft = '1px';
+	controlUI.style.marginLeft = '6px';
 
 	controlUI.style.textAlign = 'center';
 	controlUI.title = '';
@@ -360,9 +360,7 @@ function DeliveryControl(controlDiv, map) { // center
 	
 	// Set CSS for the control interior.
 	var controlText = document.createElement('div');
-	controlText.style.color = '#FFFFFF';
-	controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-	controlText.style.fontSize = '16px';
+	controlText.style.fontSize = '18px';
 	controlText.style.lineHeight = '30px';
 	controlText.style.paddingLeft = '8px';
 	controlText.style.paddingRight = '8px';

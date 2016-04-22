@@ -67,16 +67,17 @@
 	<form id="user-form">
 		<div class="form-group">
 			<label data-bind="text: lang.DeliveryLimit"></label>
-			<input class="form-control required" type="number" name="delivery_limit" id="delivery_limit" value="" />
+			<input class="form-control required" type="number" step="1" name="delivery_limit" id="delivery_limit" value="" />
 		</div>	
 		<div class="form-group">
 			<label data-bind="text: lang.Deliveryradius"></label>
-			<input class="form-control required" type="number" name="delivery_radious" id="delivery_radious" value="" />
+			<input class="form-control required" type="number" step="1" name="delivery_radious" id="delivery_radious" value="" />
 		</div>
-		<div class="checkbox">
+		
+		<!--<div class="checkbox">
 			<label>
 			<input type="checkbox" name="delivery_outside" id="delivery_outside" value="1" /> <span data-bind="text: lang.deliveroutside"></span></label>
-		</div>	
+		</div>-->	
 		<div class="form-group">
 			<label data-bind="text: lang.Deliverycharges"></label>
 			<input class="form-control required" type="number" min="0" name="delivery_charges" id="delivery_charges" value="" />
