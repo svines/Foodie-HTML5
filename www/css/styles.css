@@ -271,7 +271,7 @@ p.pageTitle{
 #lgn-sign-page form .form-group {
 	margin-bottom: 20px;
 }
-#lgn-sign-page form .form-group .form-control {
+.login-form .form-group .form-control {
 	border-radius: 0px;
 	background: #fff !important;
 	border-color: #fff;

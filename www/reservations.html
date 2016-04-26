@@ -178,7 +178,7 @@ $(document).ready(function(e) {
 		BAlert.modal();
 	});
 	
-	$('#chef-foods').on('click', '.btnFinish',function(){
+	$('#chef-foods').on('click', '.btnFinish',function(){ // rate it
 		$('#res_id').val( $(this).data('rid') );
 		$('#popFinish').modal();
 	});

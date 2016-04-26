@@ -45,6 +45,7 @@
 			</div>
 		</div>
 		<button class="btn btn-positive btn-block" data-bind="text: lang.Login">Login</button>
+		<a id="aForgot" class="btn btn-link btn-block" style="color:#FFF" data-bind="text: lang.FGlink">Forgot Password?</a>
 	</form>
 	<form id="frmRegister" method="post"  class="user-form login-form">
 		<h4 class="form-heading text-center" data-bind="text: lang.CreateandRegister">Create and Register</h4>
@@ -76,6 +77,67 @@
 	</form>
 	
 	
+
+
+<div class="modal fade" id="popForgot" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog">
+		
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"  data-bind="text: lang.FGhead"></h4>
+			</div>
+			<div class="modal-body">
+				<form method="post" id="frmForgot1">
+					
+					<div id="Step1">
+						<p data-bind="text: lang.SPsetp1"></p>
+						<div class="form-group">
+							<label data-bind="text: lang.YourEmail">Your Email</label>
+							<div class="">
+								<input type="email" name="femail" id="femail" class="form-control required email">
+							</div>
+						</div>
+					</div>
+					
+					<div id="Step2">
+						<p data-bind="text: lang.e117"></p>
+						<div class="form-group">
+							<label data-bind="text: lang.resetCodelb">Reset Code</label>
+							<div class="">
+								<input type="number" name="password_reset_key" id="password_reset_key" class="form-control required">
+							</div>
+						</div>
+					</div>
+					
+					<div id="Step3">
+						<p data-bind="text: lang.e118"></p>
+						<div class="form-group">
+							<label data-bind="text: lang.newP"></label>
+							<div class="">
+								<input type="password" name="fpassword" id="fpassword" class="form-control required">
+							</div>
+						</div>
+						<div class="form-group">
+							<label data-bind="text: lang.renewP"></label>
+							<div class="">
+								<input type="password" name="repassword" id="repassword" class="form-control required">
+							</div>
+						</div>
+						
+					</div>
+					<input type="hidden" name="hd_step" id="hd_step" value="1" />
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btnCancel btn-default" data-dismiss="modal" data-bind="text: lang.Cancel"></button>
+				<button id="btnNext" type="button" class="btn btn-primary"><span data-bind="text: lang.Next">Next</span> <i class="fa fa-arrow-circle-o-right"></i></button>
+				<button id="btnReset" type="button" class="btn btn-primary" data-bind="text: lang.btResetPwd">Reset Password</button>
+			</div>
+		</div>
+		
+	</div>
+</div>
 	
 	
 	
@@ -129,6 +191,71 @@ $(document).ready(function(e) {
 			$('#frmRegister').show(200);
 		}
 	});
+	
+	$('#aForgot').on('click',function(){
+		forgetSteps();
+		$('#popForgot').modal();
+	});
+	
+	$('.btnCancel').on('click',function(){
+		localStorage.removeItem('ForgetPwdStep');
+		localStorage.removeItem('password_reset_key');
+		localStorage.removeItem('ForgetPwdEmail');
+	});
+	
+	
+	$('#btnNext').on('click',function(){
+		//$('#hd_step').val('1');
+		$('#frmForgot1').submit();	
+	});
+	
+	$('#frmForgot1').validate({
+		errorPlacement: function(error, element) {},
+		submitHandler: function(form) {
+			
+				if( localStorage.getItem('ForgetPwdStep', '2' ) &&  $('#fpassword').val() != $('#repassword').val() ){
+					BAlert.find('.modal-header h3').html('<i class="fa fa-exclamation-triangle"></i> '+cLan.Error);
+					BAlert.find('.modal-body').html('<p class="text-danger">Password and retype password fields must match!</p>');
+					BAlert.modal();
+					return false;
+				}
+			
+			
+				formData = $(form).serialize();
+				$.ajax({
+					type: "POST", dataType: 'json', url: ServerAjax+"?h=forgotPwd", data: formData,
+					beforeSend: function() { waitingDialog.show(cLan.Loading, {dialogSize: 'sm', progressType: 'info'}); },
+					complete: function() { waitingDialog.hide(); },
+				}).fail(  ajaxError )
+				.done(function(data){
+					if (data.Success == 'true') {
+						if( localStorage.getItem('ForgetPwdStep') == '1'){
+							localStorage.setItem('ForgetPwdEmail', $('#femail').val());
+							localStorage.setItem('ForgetPwdStep', 2 );
+							forgetSteps();
+						}else if( localStorage.getItem('ForgetPwdStep') == '2'){
+							localStorage.setItem('password_reset_key', $('#password_reset_key').val());
+							localStorage.setItem('ForgetPwdStep', 3 );
+							forgetSteps();	
+						}else if( localStorage.getItem('ForgetPwdStep') == '3'){
+							localStorage.setItem('ForgetPwdStep', 1 );
+							localStorage.setItem('ForgetPwdEmail', '');
+							BAlert.find('.modal-header h3').html('<i class="fa check"></i> '+cLan.Success);
+							BAlert.find('.modal-body').html('<p class="text-success">'+cLan.s119+'</p>');
+							BAlert.find('.btn-primary').on('click',function(){ $('#popForgot').modal('hide'); $('.btnCancel').trigger('click');  });
+							BAlert.modal();
+						}
+							
+					} else { 
+						ErrorModalWithParm(data);
+					}
+					if (data.JS) { eval(data.JS); }
+			
+				}); // ajax	
+			
+		}// submit handler
+	});
+	
 	
 	$("#frmRegister").validate({
 		errorPlacement: function(error, element) {},
@@ -199,6 +326,31 @@ $(document).ready(function(e) {
 		}// submit handler
 	});
 });
+
+function forgetSteps(){
+	var step = localStorage.getItem('ForgetPwdStep');
+	if(empty(step)){ 
+		step = '1';
+		localStorage.setItem('ForgetPwdStep','1');
+	}
+	
+	$('#password_reset_key').val(localStorage.getItem('password_reset_key'));
+	
+	if( step == '1' ){
+		$('#Step1').show(); $('#Step2').hide(); $('#Step3').hide(); 
+		$('#btnNext').show();$('#btnReset').hide();
+	}else if( step == '2' ){
+		$('#Step1').hide(); $('#Step2').show(); $('#Step3').hide(); 
+		$('#btnNext').show();$('#btnReset').hide();
+	}else if( step == '3' ){
+		$('#Step1').hide(); $('#Step2').hide(); $('#Step3').show(); 
+		$('#btnNext').show();$('#btnReset').hide();
+	}
+	if(empty($('#femail').val())){
+		$('#femail').val(localStorage.getItem('ForgetPwdEmail'));
+	}
+	$('#hd_step').val(step);	
+}
 </script>
 </body>
 </html>
