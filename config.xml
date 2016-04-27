@@ -21,6 +21,7 @@
     <plugin name="cordova-plugin-file" source="pgb" />
     <plugin name="cordova-plugin-file-transfer" source="pgb" />
     <plugin name="cordova-plugin-console" source="pgb" />
+	<gap:plugin name="phonegap-plugin-barcodescanner" source="npm" />
     
     <icon src="icon.png" />
     <platform name="ios">
