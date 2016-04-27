@@ -35,7 +35,7 @@
     <platform name="android" />
     <platform name="winphone" />
     <plugin name="cordova-plugin-facebook4" spec="~1.7.0">
-        <parm name="APP_ID" value="1429053297422142" />
-        <parm name="APP_NAME" value="Foodie" />
+        <param name="APP_ID" value="1429053297422142" />
+        <param name="APP_NAME" value="Foodie" />
     </plugin>
 </widget>
