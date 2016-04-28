@@ -107,13 +107,13 @@
 	</div>
 	<h2 class="text-center"><span data-bind="text: lang.AvailableDishes"></span>
 	<div>
-	<button id="btnStartOrder" class="btn btn-primary disabled" data-bind="text: lang.OrderNow"></button>
+	<button id="btnStartOrder" class="btn btn-primary disabled" data-bind="text: lang.DineInOrder"></button>
 	<button id="btnStartDeliveryOrder" class="btn btn-primary disabled" data-bind="text: lang.DeliveryOrder"></button>
 	</div>
 	</h2>
 	<div id="chef-foods">
 		<div class="food-listing hidden">
-			<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left" src="images/food-1.png" align="food img"> </div>
+			<div class="food-image-cont"> <img class="img-responsive img-circle media-object pull-left"  src="images/food-1.png" align="food img"> </div>
 			<div class="food-info-cont">
 				<div class="food-info-body"> <a class="dishTitle">..</a><br />
 					<p class="dishInfo"></p>
@@ -1132,6 +1132,7 @@ function loadDishes(chef_id){
 				dishData = data.Dishes;
 				DishAv = data.DishAv;
 				$DTemp = $('.food-listing');
+				var dineDishes = 0, deliveryDishes = 0;
 				for (var i = 0; i < dishData.length; i++) {
 					$copy = $DTemp.clone().removeClass('hidden');
 					
@@ -1147,14 +1148,16 @@ function loadDishes(chef_id){
 					$copy.find('.btnReserve').prop('data-dish', dishData[i].id );
 					$copy.find('p.dishInfo').html('Price : $'+dishData[i].price);
 					
+					if( dishData[i].availability == 1 || dishData[i].availability == 3 ) dineDishes ++;
+					if( dishData[i].availability == 2 || dishData[i].availability == 3 ) deliveryDishes ++;
 					/*obRat = ratingCal( dishData[i].rating_sum, dishData[i].rating_count );
 					$copy.find('img.rating').prop('src', obRat['starImg']);
 					$copy.find('.rating_info').html( obRat['ratingTxt']+' &nbsp; '+dishData[i].rating_count+' Reviews' );*/
 				
 					$copy.appendTo('#chef-foods');
 				}
-				$('#btnStartOrder').removeClass('disabled');
-				$('#btnStartDeliveryOrder').removeClass('disabled');
+				if( dineDishes > 0 )			$('#btnStartOrder').removeClass('disabled');
+				if( deliveryDishes > 0 )	$('#btnStartDeliveryOrder').removeClass('disabled');
 			}else{
 				$('#chef-foods').html('<center>No Dishes Found</center>');
 			}
