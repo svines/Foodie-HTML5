@@ -763,8 +763,13 @@ $(".modal-fullscreen").on('hidden.bs.modal', function () {
 								'<div class="spDishD">'+cLan.Price+' : $'+dishData[i].price+ ' &nbsp; '+cLan.Qty+' : <input id="aQty'+dishData[i].id+'" type="number" value="1" class="input-sm inline" /></div></li>');
 						} 
 					}
+					
+					
+					$('#Step2').show(); $('#btnOrder').show();
 					$('#Step1').hide(); $('#btnNext').hide();	
-					$('#Step2').show(500); $('#btnOrder').show(500);
+					
+					
+					
 					
 				} else { 
 					ErrorModalWithParm(data);
